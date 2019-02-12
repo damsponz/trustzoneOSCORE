@@ -53,5 +53,5 @@ dkms.conf
 
 
 #exclude
-!/Secure/lib
+!/Secure/lib/*
 
