@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1265006128/PATH/delimiter=\:
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1265006128/PATH/operation=replace
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1265006128/PATH/value=/home/dso/local/gcc-arm-none-eabi-8-2018-q4-major/bin\:/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/usr/games\:/usr/local/games\:/snap/bin
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1265006128/append=true
+environment/project/ilg.gnuarmeclipse.managedbuild.cross.config.elf.debug.1265006128/appendContributed=true
