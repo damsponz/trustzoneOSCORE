@@ -37,9 +37,30 @@ void OSCORE_crypto_init() {
     NVIC_EnableIRQ(CRPT_IRQn);
     AES_ENABLE_INT(CRPT);
 
-	AES_Open(CRPT, 0, 1, AES_MODE_ECB, AES_KEY_SIZE_128, AES_IN_OUT_SWAP);
-	AES_SetKey(CRPT, 0, au32AESKey, AES_KEY_SIZE_128);
-	AES_SetInitVect(CRPT, 0, au32AESIV);
+    printf("before init : \n"
+    		"CRPT->AES0_CNT   : %d\n"
+    		"CRPT->AES0_DADDR : %d\n"
+    		"CRPT->AES0_IV    : %d\n"
+    		"CRPT->AES0_KEY   : %d\n"
+    		"CRPT->AES0_SADDR : %d\n", CRPT->AES1_CNT,CRPT->AES1_DADDR,CRPT->AES1_IV, CRPT->AES1_KEY, CRPT->AES1_SADDR);
+
+	AES_Open(CRPT, 1, 1, AES_MODE_ECB, AES_KEY_SIZE_128, AES_IN_OUT_SWAP);
+
+	printf("AES_Open : \n"
+	    	"CRPT->AES0_CNT   : %d\n", CRPT->AES1_CNT);
+
+
+	AES_SetKey(CRPT, 1, au32AESKey, AES_KEY_SIZE_128);
+	AES_SetInitVect(CRPT, 1, au32AESIV);
+
+	/*
+	printf("after init : \n"
+	    		"AES0_CNT         : %d\n"
+	    		"CRPT->AES0_DADDR : %d\n"
+	    		"CRPT->AES0_IV    : %d\n"
+	    		"CRPT->AES0_KEY   : %d\n"
+	    		"CRPT->AES0_SADDR : %d\n", CRPT->AES0_CNT,CRPT->AES0_DADDR,CRPT->AES0_IV, CRPT->AES0_KEY, CRPT->AES0_SADDR);
+	*/
 
 }
 
@@ -51,20 +72,20 @@ void OSCORE_SetKey(uint8_t InputKey[AES_KEY_SIZE_128/8]) {
 
 void AES_ONE_BLOCK_encrypt_data(uint8_t InputData[], uint8_t OutputData[]) {
 
-	printf("encrypt function.\n");
+	//printf("encrypt function.\n");
 
-	printf("&inputData  = %p\n",InputData);
-	printf("&outputData  = %p\n",OutputData);
+	//printf("&inputData  = %p\n",InputData);
+	//printf("&outputData  = %p\n",OutputData);
 
 	OSCORE_crypto_init();
-	printf("init ok.\n");
+	//printf("init ok.\n");
 
 	/*---------------------------------------
 	 *  AES-128 ECB mode encrypt
 	 *---------------------------------------*/
 
 	AES_SetDMATransfer(CRPT, 0, (uint32_t)InputData, (uint32_t)OutputData, (uint32_t)(16));
-	printf("dma ok.\n");
+	//printf("dma ok.\n");
 	g_AES_done = 0;
 	/* Start AES Eecrypt */
 	//printf("Input data\n");
@@ -72,13 +93,13 @@ void AES_ONE_BLOCK_encrypt_data(uint8_t InputData[], uint8_t OutputData[]) {
 	//printf("Output data\n");
 	//print_Block(OutputData);
 
-	printf("&inputData  = %p\n",InputData);
-	printf("&outputData  = %p\n",OutputData);
+	//printf("&inputData  = %p\n",InputData);
+	//printf("&outputData  = %p\n",OutputData);
 
 	AES_Start(CRPT, 0, CRYPTO_DMA_ONE_SHOT);
-	printf("start AES.\n");
+	//printf("start AES.\n");
 	CLK_SysTickLongDelay(1000000);
-	print_Block(OutputData);
+	//print_Block(OutputData);
 	/* Waiting for AES calculation */
 	//while(!g_AES_done);
 

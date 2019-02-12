@@ -198,10 +198,10 @@ int main(void)
     printf("Secure is running ...\n");
 
     /* Init GPIO Port A for secure LED control */
-//    GPIO_SetMode(PA, BIT11 | BIT10, GPIO_MODE_OUTPUT);
+    GPIO_SetMode(PA, BIT11 | BIT10, GPIO_MODE_OUTPUT);
 
     /* Init GPIO Port B for secure LED control */
-//    GPIO_SetMode(PB, BIT1 | BIT0, GPIO_MODE_OUTPUT);
+    GPIO_SetMode(PB, BIT1 | BIT0, GPIO_MODE_OUTPUT);
 
     /* Generate Systick interrupt each 10 ms */
 //    SysTick_Config(SystemCoreClock / 100);
@@ -210,9 +210,9 @@ int main(void)
 
 //    SCU_SET_IONSSET(SCU_IONSSET_PC_Msk);
 
-//    XOM1_Func(1);
+    XOM1_Func(1);
 
-//    XOM0_Func(0);
+    XOM0_Func(0);
 
     printf("+---------------------------------------+\n");
     printf("|     Crypto AES Driver Sample Code     |\n");

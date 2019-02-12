@@ -33,32 +33,38 @@
 		<link>
 			<name>Library/_syscalls.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Library/Device/Nuvoton/M2351/Source/GCC/_syscalls.c</locationURI>
+			<locationURI>GIT_HOME/Library/Device/Nuvoton/M2351/Source/GCC/_syscalls.c</locationURI>
 		</link>
 		<link>
 			<name>Library/libnsc.a</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Secure/lib/libnsc.a</locationURI>
+			<locationURI>GIT_HOME/Secure/lib/libnsc.a</locationURI>
 		</link>
 		<link>
 			<name>Library/semihosting.h</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Library/Device/Nuvoton/M2351/Source/GCC/semihosting.h</locationURI>
+			<locationURI>GIT_HOME/Library/Device/Nuvoton/M2351/Source/GCC/semihosting.h</locationURI>
 		</link>
 		<link>
 			<name>Library/src</name>
 			<type>2</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Library/StdDriver/src</locationURI>
+			<locationURI>GIT_HOME/Library/StdDriver/src</locationURI>
 		</link>
 		<link>
 			<name>Library/startup_M2351.S</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Library/Device/Nuvoton/M2351/Source/GCC/startup_M2351.S</locationURI>
+			<locationURI>GIT_HOME/Library/Device/Nuvoton/M2351/Source/GCC/startup_M2351.S</locationURI>
 		</link>
 		<link>
 			<name>Library/system_M2351.c</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/Library/Device/Nuvoton/M2351/Source/system_M2351.c</locationURI>
+			<locationURI>GIT_HOME/Library/Device/Nuvoton/M2351/Source/system_M2351.c</locationURI>
 		</link>
 	</linkedResources>
+	<variableList>
+		<variable>
+			<name>GIT_HOME</name>
+			<value>file:/home/dso/git/trustzoneOSCORE</value>
+		</variable>
+	</variableList>
 </projectDescription>
