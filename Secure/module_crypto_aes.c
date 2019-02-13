@@ -21,10 +21,9 @@ void CRPT_IRQHandler()
 
 void OSCORE_crypto_init() {
 
-	uint32_t au32AESKey[8] =
+	__attribute__((aligned(4))) uint32_t au32AESKey[16] =
 	{
-	    0x00010203, 0x04050607, 0x08090a0b, 0x0c0d0e0f,
-	    0x00010203, 0x04050607, 0x08090a0b, 0x0c0d0e0f
+		0x2b7e1516, 0x28aed2a6, 0xabf71588, 0x09cf4f3c
 	};
 
 	printf("&au32AESKey  = %p\n",au32AESKey);
@@ -34,37 +33,18 @@ void OSCORE_crypto_init() {
 	    0x00000000, 0x00000000, 0x00000000, 0x00000000
 	};
 
+	printf("&au32AESKey  = %p\n",au32AESKey);
+
     NVIC_EnableIRQ(CRPT_IRQn);
     AES_ENABLE_INT(CRPT);
 
-    printf("before init : \n"
-    		"CRPT->AES0_CNT   : %d\n"
-    		"CRPT->AES0_DADDR : %d\n"
-    		"CRPT->AES0_IV    : %d\n"
-    		"CRPT->AES0_KEY   : %d\n"
-    		"CRPT->AES0_SADDR : %d\n", CRPT->AES1_CNT,CRPT->AES1_DADDR,CRPT->AES1_IV, CRPT->AES1_KEY, CRPT->AES1_SADDR);
-
-	AES_Open(CRPT, 1, 1, AES_MODE_ECB, AES_KEY_SIZE_128, AES_IN_OUT_SWAP);
-
-	printf("AES_Open : \n"
-	    	"CRPT->AES0_CNT   : %d\n", CRPT->AES1_CNT);
-
-
-	AES_SetKey(CRPT, 1, au32AESKey, AES_KEY_SIZE_128);
-	AES_SetInitVect(CRPT, 1, au32AESIV);
-
-	/*
-	printf("after init : \n"
-	    		"AES0_CNT         : %d\n"
-	    		"CRPT->AES0_DADDR : %d\n"
-	    		"CRPT->AES0_IV    : %d\n"
-	    		"CRPT->AES0_KEY   : %d\n"
-	    		"CRPT->AES0_SADDR : %d\n", CRPT->AES0_CNT,CRPT->AES0_DADDR,CRPT->AES0_IV, CRPT->AES0_KEY, CRPT->AES0_SADDR);
-	*/
+	AES_Open(CRPT, 0, 1, AES_MODE_ECB, AES_KEY_SIZE_128, AES_IN_OUT_SWAP);
+	AES_SetKey(CRPT, 0, au32AESKey, AES_KEY_SIZE_128);
+	AES_SetInitVect(CRPT, 0, au32AESIV);
 
 }
 
-void OSCORE_SetKey(uint8_t InputKey[AES_KEY_SIZE_128/8]) {
+void OSCORE_SetKey(uint8_t InputKey[]) {
 
 	printf("nothing");
 
@@ -72,7 +52,7 @@ void OSCORE_SetKey(uint8_t InputKey[AES_KEY_SIZE_128/8]) {
 
 void AES_ONE_BLOCK_encrypt_data(uint8_t InputData[], uint8_t OutputData[]) {
 
-	//printf("encrypt function.\n");
+	printf("encrypt function.\n");
 
 	//printf("&inputData  = %p\n",InputData);
 	//printf("&outputData  = %p\n",OutputData);
@@ -84,36 +64,39 @@ void AES_ONE_BLOCK_encrypt_data(uint8_t InputData[], uint8_t OutputData[]) {
 	 *  AES-128 ECB mode encrypt
 	 *---------------------------------------*/
 
-	AES_SetDMATransfer(CRPT, 0, (uint32_t)InputData, (uint32_t)OutputData, (uint32_t)(16));
-	//printf("dma ok.\n");
+	AES_SetDMATransfer(CRPT, 0, (uint32_t)InputData, (uint32_t)OutputData, 16);
+
+	printf("before start AES : \n"
+		    		"CRPT->AES0_CNT   : %d\n"
+		    		"CRPT->AES0_DADDR : %d\n"
+		    		"CRPT->AES0_IV    : %d\n"
+		    		"CRPT->AES0_KEY   : %d\n"
+		    		"CRPT->AES0_SADDR : %d\n", CRPT->AES1_CNT,CRPT->AES1_DADDR,CRPT->AES1_IV, CRPT->AES1_KEY, CRPT->AES1_SADDR);
+
+
 	g_AES_done = 0;
-	/* Start AES Eecrypt */
-	//printf("Input data\n");
-	//print_Block(InputData);
-	//printf("Output data\n");
-	//print_Block(OutputData);
+	/* Start AES encrypt */
+	AES_Start(CRPT, 0, CRYPTO_DMA_ONE_SHOT);
+
+	/* Waiting for AES calculation */
+	while(!g_AES_done);
+
+}
+
+void AES_ONE_BLOCK_decrypt_data(uint8_t InputData[], uint8_t OutputData[]) {
+
+	printf("decrypt function.\n");
 
 	//printf("&inputData  = %p\n",InputData);
 	//printf("&outputData  = %p\n",OutputData);
 
-	AES_Start(CRPT, 0, CRYPTO_DMA_ONE_SHOT);
-	//printf("start AES.\n");
-	CLK_SysTickLongDelay(1000000);
-	//print_Block(OutputData);
-	/* Waiting for AES calculation */
-	//while(!g_AES_done);
-
-}
-
-void AES_ONE_BLOCK_decrypt_data(uint8_t InputData[AES_KEY_SIZE_128/8], uint8_t OutputData[AES_KEY_SIZE_128/8]) {
-
-	OSCORE_crypto_init();
+	//OSCORE_crypto_init();
 
     /*---------------------------------------
      *  AES-128 ECB mode decrypt
      *---------------------------------------*/
 
-    AES_SetDMATransfer(CRPT, 0, (uint32_t)OutputData, (uint32_t)InputData, (uint32_t)(AES_KEY_SIZE_128/8));
+    AES_SetDMATransfer(CRPT, 0, (uint32_t)OutputData, (uint32_t)InputData, 16);
 
     g_AES_done = 0;
     /* Start AES decrypt */

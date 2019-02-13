@@ -220,6 +220,18 @@ void AES_SetDMATransfer(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32SrcAddr,
                         uint32_t u32DstAddr, uint32_t u32TransCnt)
 {
     uint32_t  reg_addr;
+
+    reg_addr = (uint32_t)&crpt->AES0_SADDR + (u32Channel * 0x3CUL);
+    outpw(reg_addr, u32SrcAddr);
+
+    reg_addr = (uint32_t)&crpt->AES0_DADDR + (u32Channel * 0x3CUL);
+    outpw(reg_addr, u32DstAddr);
+
+    reg_addr = (uint32_t)&crpt->AES0_CNT + (u32Channel * 0x3CUL);
+    outpw(reg_addr, u32TransCnt);
+
+	/*
+    uint32_t  reg_addr;
     uint32_t  reg_value;
 
     printf("u32SrcAddr : %x\n", u32SrcAddr);
@@ -233,7 +245,7 @@ void AES_SetDMATransfer(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32SrcAddr,
     printf("reg_value_src : %x\n", reg_value);
     reg_addr = (uint32_t)&crpt->AES0_DADDR + (u32Channel * 0x3CUL);
     //outpw(reg_addr, u32DstAddr);
-    outpw(reg_addr, 20001330);
+    outpw(reg_addr, 0x20001330UL);
     reg_value = inpw((uint32_t *)reg_addr);
     printf("reg_addr_dst : %x\n", reg_addr);
     printf("reg_value_dst : %x\n", reg_value);
@@ -242,7 +254,7 @@ void AES_SetDMATransfer(CRPT_T *crpt, uint32_t u32Channel, uint32_t u32SrcAddr,
     outpw(reg_addr, 10);
     reg_value = inpw((uint32_t *)reg_addr);
     printf("reg_addr_size : %x\n", reg_addr);
-    printf("reg_value_size : %x\n", reg_value);
+    printf("reg_value_size : %x\n", reg_value); */
 }
 
 /**

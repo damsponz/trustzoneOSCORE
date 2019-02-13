@@ -1,10 +1,10 @@
 /**************************************************************************//**
  * @file     main.c
  * @version  V1.00
- * @brief    Secure sample code for TrustZone
+ * @brief    Secure sample code for TrustZone OSCORE
  *
  * @note
- * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
+ * AES
  *
  ******************************************************************************/
 
@@ -211,7 +211,6 @@ int main(void)
 //    SCU_SET_IONSSET(SCU_IONSSET_PC_Msk);
 
     XOM1_Func(1);
-
     XOM0_Func(0);
 
     printf("+---------------------------------------+\n");
@@ -222,35 +221,15 @@ int main(void)
      *  AES-128 ECB mode encrypt
      *---------------------------------------*/
 
-    __attribute__((aligned(4))) uint8_t plainData[16];
-
-    plainData[0] = 0x2b;
-    plainData[1] = 0x7e;
-    plainData[2] = 0x15;
-    plainData[3] = 0x16;
-    plainData[4] = 0x28;
-    plainData[5] = 0xae;
-    plainData[6] = 0xd2;
-    plainData[7] = 0xa6;
-    plainData[8] = 0xab;
-    plainData[9] = 0xf7;
-    plainData[10] = 0x15;
-    plainData[11] = 0x88;
-    plainData[12] = 0x09;
-    plainData[13] = 0xcf;
-    plainData[14] = 0x4f;
-    plainData[15] = 0x3c;
-
-    __attribute__((aligned(4))) uint8_t cipheredData[16];
-    __attribute__((aligned(4))) uint8_t resultData[16];
+    __attribute__((aligned(4))) uint8_t plainData[16] = {0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x07, 0x34};
+    __attribute__((aligned(4))) uint8_t cipheredData[16] = {0};
+    __attribute__((aligned(4))) uint8_t resultData[16] = {0};
 
     printf("AES plain data.\n\n");
-
 	printf("&plainData  = %p\n",plainData);
 	print_Block(plainData);
 	printf("&cipheredData  = %p\n",cipheredData);
 	print_Block(cipheredData);
-	//printf("&resultData  = %p\n",resultData);
 
     AES_ONE_BLOCK_encrypt_data(plainData, cipheredData);
 
@@ -260,17 +239,17 @@ int main(void)
     /*---------------------------------------
      *  AES-128 ECB mode decrypt
      *---------------------------------------*/
-/*
+
     AES_ONE_BLOCK_decrypt_data(cipheredData, resultData);
 
     printf("AES decrypt done.\n\n");
     print_Block(resultData);
-*/
+
 
 
 //    Boot_Init(NEXT_BOOT_BASE);
 
-    while(1);
+    //while(1);
 
 }
 
@@ -295,6 +274,12 @@ void SYS_Init(void)
 
     /* Enable UART clock */
     CLK->APBCLK0 |= CLK_APBCLK0_UART0CKEN_Msk;
+
+    /* Enable Crypto Accelerator */
+    CLK->AHBCLK  |= CLK_AHBCLK_CRPTCKEN_Msk;
+
+    /* Select Crypto clock source */
+//    CLK->CLKSEL3 = CLK_CLKSEL3_UART5SEL_HIRC;
 
     /* Select UART clock source */
     CLK->CLKSEL1 = (CLK->CLKSEL1 & (~CLK_CLKSEL1_UART0SEL_Msk)) | CLK_CLKSEL1_UART0SEL_HIRC;

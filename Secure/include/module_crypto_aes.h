@@ -10,6 +10,7 @@
 
 static volatile int32_t g_AES_done;
 
+void CRPT_IRQHandler(void);
 void OSCORE_crypto_init(void);
 void OSCORE_SetKey(uint8_t *);
 void AES_ONE_BLOCK_encrypt_data(uint8_t *, uint8_t *);
