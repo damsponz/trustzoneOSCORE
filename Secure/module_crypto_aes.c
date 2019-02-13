@@ -58,7 +58,6 @@ void AES_ONE_BLOCK_encrypt_data(uint8_t InputData[], uint8_t OutputData[]) {
 	//printf("&outputData  = %p\n",OutputData);
 
 	OSCORE_crypto_init();
-	//printf("init ok.\n");
 
 	/*---------------------------------------
 	 *  AES-128 ECB mode encrypt
@@ -71,7 +70,7 @@ void AES_ONE_BLOCK_encrypt_data(uint8_t InputData[], uint8_t OutputData[]) {
 		    		"CRPT->AES0_DADDR : %d\n"
 		    		"CRPT->AES0_IV    : %d\n"
 		    		"CRPT->AES0_KEY   : %d\n"
-		    		"CRPT->AES0_SADDR : %d\n", CRPT->AES1_CNT,CRPT->AES1_DADDR,CRPT->AES1_IV, CRPT->AES1_KEY, CRPT->AES1_SADDR);
+		    		"CRPT->AES0_SADDR : %d\n", CRPT->AES0_CNT,CRPT->AES0_DADDR,CRPT->AES0_IV, CRPT->AES0_KEY, CRPT->AES0_SADDR);
 
 
 	g_AES_done = 0;
@@ -87,16 +86,23 @@ void AES_ONE_BLOCK_decrypt_data(uint8_t InputData[], uint8_t OutputData[]) {
 
 	printf("decrypt function.\n");
 
-	//printf("&inputData  = %p\n",InputData);
-	//printf("&outputData  = %p\n",OutputData);
+	printf("&inputData  = %p\n",InputData);
+	printf("&outputData  = %p\n",OutputData);
 
-	//OSCORE_crypto_init();
+	OSCORE_crypto_init();
 
     /*---------------------------------------
      *  AES-128 ECB mode decrypt
      *---------------------------------------*/
 
     AES_SetDMATransfer(CRPT, 0, (uint32_t)OutputData, (uint32_t)InputData, 16);
+
+	printf("before start AES : \n"
+		    		"CRPT->AES0_CNT   : %d\n"
+		    		"CRPT->AES0_DADDR : %d\n"
+		    		"CRPT->AES0_IV    : %d\n"
+		    		"CRPT->AES0_KEY   : %d\n"
+		    		"CRPT->AES0_SADDR : %d\n", CRPT->AES0_CNT,CRPT->AES0_DADDR,CRPT->AES0_IV, CRPT->AES0_KEY, CRPT->AES0_SADDR);
 
     g_AES_done = 0;
     /* Start AES decrypt */

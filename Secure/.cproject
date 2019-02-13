@@ -83,7 +83,7 @@
                             							
                             <option id="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.endianness.700525014" name="Endianness" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.endianness" useByScannerDiscovery="true" value="ilg.gnuarmeclipse.managedbuild.cross.option.arm.target.endianness.little" valueType="enumerated"/>
                             							
-                            <option id="ilg.gnuarmeclipse.managedbuild.cross.option.target.other.702771238" name="Other target flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.target.other" useByScannerDiscovery="true" value="-march=armv8-m.base -Wl,--section-start,.gnu.sgstubs=0x3F000,--out-implib=/home/dso/git/trustzoneOSCORE/Secure/lib/libnsc.a,--cmse-implib" valueType="string"/>
+                            <option id="ilg.gnuarmeclipse.managedbuild.cross.option.target.other.702771238" name="Other target flags" superClass="ilg.gnuarmeclipse.managedbuild.cross.option.target.other" useByScannerDiscovery="true" value="-march=armv8-m.base -Wl,--section-start,.gnu.sgstubs=0x3F000,--out-implib=lib/libnsc.a,--cmse-implib" valueType="string"/>
                             							
                             <targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform.503913644" isAbstract="false" osList="all" superClass="ilg.gnuarmeclipse.managedbuild.cross.targetPlatform"/>
                             							

@@ -278,9 +278,6 @@ void SYS_Init(void)
     /* Enable Crypto Accelerator */
     CLK->AHBCLK  |= CLK_AHBCLK_CRPTCKEN_Msk;
 
-    /* Select Crypto clock source */
-//    CLK->CLKSEL3 = CLK_CLKSEL3_UART5SEL_HIRC;
-
     /* Select UART clock source */
     CLK->CLKSEL1 = (CLK->CLKSEL1 & (~CLK_CLKSEL1_UART0SEL_Msk)) | CLK_CLKSEL1_UART0SEL_HIRC;
 
