@@ -224,25 +224,37 @@ int main(void)
     __attribute__((aligned(4))) uint8_t plainData[16] = {0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x07, 0x34};
     __attribute__((aligned(4))) uint8_t cipheredData[16] = {0};
     __attribute__((aligned(4))) uint8_t resultData[16] = {0};
+	__attribute__((aligned(4))) uint32_t au32AESKey[4] =
+	{
+		0x2b7e1516, 0x28aed2a6, 0xabf71588, 0x09cf4f3c
+	};
+	__attribute__((aligned(4))) uint32_t au32AESIV[4] =
+	{
+	    0x00000000, 0x00000000, 0x00000000, 0x00000000
+	};
 
     printf("AES plain data.\n\n");
 	printf("&plainData  = %p\n",plainData);
 	print_Block(plainData);
-	printf("&cipheredData  = %p\n",cipheredData);
-	print_Block(cipheredData);
 
+	OSCORE_crypto_init(ENCRYPT);
+	OSCORE_crypto_SetKey(au32AESKey,au32AESIV);
     AES_ONE_BLOCK_encrypt_data(plainData, cipheredData);
 
     printf("AES encrypt done.\n\n");
+	printf("&cipheredData  = %p\n",cipheredData);
     print_Block(cipheredData);
 
     /*---------------------------------------
      *  AES-128 ECB mode decrypt
      *---------------------------------------*/
 
+	OSCORE_crypto_init(DECRYPT);
+	OSCORE_crypto_SetKey(au32AESKey,au32AESIV);
     AES_ONE_BLOCK_decrypt_data(cipheredData, resultData);
 
     printf("AES decrypt done.\n\n");
+    printf("&resultData  = %p\n",resultData);
     print_Block(resultData);
 
 
