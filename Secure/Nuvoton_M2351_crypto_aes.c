@@ -5,9 +5,6 @@
  *      Author: Damien SOURSAS
  */
 
-#include <stdio.h>
-#include <string.h>
-#include "NuMicro.h"
 #include "Nuvoton_M2351_crypto_aes.h"
 
 void CRPT_IRQHandler()
@@ -73,9 +70,7 @@ void Nuvoton_M2351_decrypt_data(uint8_t InputData[], uint8_t OutputData[]) {
 
 	/*
 	printf("&inputData  = %p\n",InputData);
-	print_Block(InputData);
 	printf("&outputData  = %p\n",OutputData);
-	print_Block(OutputData);
 	*/
 
     /*---------------------------------------
@@ -96,21 +91,5 @@ void Nuvoton_M2351_decrypt_data(uint8_t InputData[], uint8_t OutputData[]) {
     AES_Start(CRPT, 0, CRYPTO_DMA_ONE_SHOT);
     /* Waiting for AES calculation */
     while(!g_AES_done);
-
-}
-void print_Block(uint8_t *block) {
-
-    //printf("&block  = %p\n",block);
-
-    for (uint8_t i = 0; i < 4; i++) {
-        printf("|");
-        for (uint8_t j = 0; j < 16; j = j+4) {
-
-            printf(" %02x",block[i+j]);
-
-        }
-        printf(" |\n");
-    }
-    printf("\n");
 
 }

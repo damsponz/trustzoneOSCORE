@@ -1,7 +1,7 @@
 /**************************************************************************//**
  * @file     main.c
  * @version  V1.00
- * @brief    Secure sample code for TrustZone OSCORE
+ * @brief    Secure main code for TrustZone OSCORE
  *
  * @note
  * AES
@@ -9,7 +9,7 @@
  ******************************************************************************/
 
 #include <arm_cmse.h>
-#include <Nuvoton_M2351_crypto_aes.h>
+#include "Oscore_crypto.h"
 #include <stdio.h>
 #include "NuMicro.h"                      /* Device header */
 #include "partition_M2351.h"
@@ -25,41 +25,10 @@
 typedef __NONSECURE_CALL int32_t (*NonSecure_funcptr)(uint32_t);
 typedef int32_t (*Secure_funcptr)(uint32_t);
 
-
-/*----------------------------------------------------------------------------
-  Secure functions exported to NonSecure application
-  Must place in Non-secure Callable
- *----------------------------------------------------------------------------*/
-__NONSECURE_ENTRY
-int32_t Secure_func(void)
-{
-    printf("Secure NSC func\n");
-
-    return 1;
-}
-
-__NONSECURE_ENTRY
-int32_t Secure_LED_On(uint32_t num)
-{
-    printf("Secure LED On call by Non-secure\n");
-    PA10 = 0;
-    PB0 = 0;
-    return 0;
-}
-
-__NONSECURE_ENTRY
-int32_t Secure_LED_Off(uint32_t num)
-{
-    printf("Secure LED Off call by Non-secure\n");
-    PA10 = 1;
-    PB0 = 1;
-    return 1;
-}
-
 /*----------------------------------------------------------------------------
   NonSecure callable function for NonSecure callback
  *----------------------------------------------------------------------------*/
-
+/*
 NonSecure_funcptr pfNonSecure_LED_On = (NonSecure_funcptr)NULL;
 NonSecure_funcptr pfNonSecure_LED_Off = (NonSecure_funcptr)NULL;
 
@@ -76,67 +45,12 @@ int32_t Secure_LED_Off_callback(NonSecure_funcptr *callback)
     pfNonSecure_LED_Off = (NonSecure_funcptr)cmse_nsfptr_create(callback);
     return 0;
 }
-
-/*----------------------------------------------------------------------------
-  Secure LED control function
- *----------------------------------------------------------------------------*/
-int32_t LED_On(void)
-{
-    printf("Secure LED On\n");
-    PA11 = 0;
-    PB1 = 0;
-    return 1;
-}
-
-int32_t LED_Off(void)
-{
-    printf("Secure LED Off\n");
-    PA11 = 1;
-    PB1 = 1;
-    return 1;
-}
-
-/*----------------------------------------------------------------------------
-  SysTick IRQ Handler
- *----------------------------------------------------------------------------*/
-void SysTick_Handler(void)
-{
-    static uint32_t u32Ticks;
-
-    switch(u32Ticks++)
-    {
-        case   0:
-            LED_On();
-            break;
-        case 200:
-            LED_Off();
-            break;
-        case 300:
-            if(pfNonSecure_LED_On != NULL)
-            {
-                pfNonSecure_LED_On(1u);
-            }
-            break;
-        case 500:
-            if(pfNonSecure_LED_Off != NULL)
-            {
-                pfNonSecure_LED_Off(1u);
-            }
-            break;
-
-        default:
-            if(u32Ticks > 600)
-            {
-                u32Ticks = 0;
-            }
-    }
-}
+*/
 
 
 void SYS_Init(void);
 void DEBUG_PORT_Init(void);
 void Boot_Init(uint32_t u32BootBase);
-void print_Block(uint8_t *);
 
 /*----------------------------------------------------------------------------
     Boot_Init function is used to jump to next boot code.
@@ -195,74 +109,18 @@ int main(void)
     /* UART is configured as debug port */
     DEBUG_PORT_Init();
 
-    printf("Secure is running ...\n");
+    printf("\n");
+    printf("+---------------------------------------------+\n");
+    printf("|             Secure is running ...           |\n");
+    printf("+---------------------------------------------+\n");
 
     XOM1_Func(1);
     XOM0_Func(0);
 
-    printf("+---------------------------------------+\n");
-    printf("|     Crypto AES Driver Sample Code     |\n");
-    printf("+---------------------------------------+\n");
-
-    /*---------------------------------------
-     *  AES-128 ECB mode encrypt
-     *---------------------------------------*/
-
-    __attribute__((aligned(4))) uint8_t plainData[16] = {0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x07, 0x34};
-    __attribute__((aligned(4))) uint8_t cipheredData[16] = {0};
-    __attribute__((aligned(4))) uint8_t resultData[16] = {0};
-	__attribute__((aligned(4))) uint32_t au32AESKey[4] =
-	{
-		0x2b7e1516, 0x28aed2a6, 0xabf71588, 0x09cf4f3c
-	};
-	__attribute__((aligned(4))) uint32_t au32AESIV[4] =
-	{
-	    0x00000000, 0x00000000, 0x00000000, 0x00000000
-	};
-
-    printf("AES plain data.\n\n");
-	printf("&plainData  = %p\n",plainData);
-	print_Block(plainData);
-
-	Nuvoton_M2351_crypto_init(ENCRYPT);
-	Nuvoton_M2351_crypto_setKey(au32AESKey,au32AESIV);
-	Nuvoton_M2351_encrypt_data(plainData, cipheredData);
-
-    printf("AES encrypt done.\n\n");
-	printf("&cipheredData  = %p\n",cipheredData);
-    print_Block(cipheredData);
-
-    /*---------------------------------------
-     *  AES-128 ECB mode decrypt
-     *---------------------------------------*/
-
-    Nuvoton_M2351_crypto_init(DECRYPT);
-    Nuvoton_M2351_crypto_setKey(au32AESKey,au32AESIV);
-	Nuvoton_M2351_decrypt_data(cipheredData, resultData);
-
-    printf("AES decrypt done.\n\n");
-    printf("&resultData  = %p\n",resultData);
-    print_Block(resultData);
-
     /* Init GPIO Port A for secure LED control */
     GPIO_SetMode(PA, BIT11 | BIT10, GPIO_MODE_OUTPUT);
 
-    /* Init GPIO Port B for secure LED control */
-    GPIO_SetMode(PB, BIT1 | BIT0, GPIO_MODE_OUTPUT);
-
-    /* Generate Systick interrupt each 10 ms */
-    SysTick_Config(SystemCoreClock / 100);
-
-    /* Set GPIO Port C to non-secure for LED control */
-    SCU_SET_IONSSET(SCU_IONSSET_PC_Msk);
-
     Boot_Init(NEXT_BOOT_BASE);
-
-    do
-    {
-        __WFI();
-    }
-    while(1);
 
 }
 

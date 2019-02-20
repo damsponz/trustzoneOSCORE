@@ -2,8 +2,12 @@
  * Nuvoton_M2351_crypto_aes.h
  *
  *  Created on: 5 févr. 2019
- *      Author: dso
+ *      Author: Damien SOURSAS
  */
+
+#include <stdio.h>
+#include <string.h>
+#include "NuMicro.h"
 
 #ifndef NUVOTON_M2351_CRYPTO_AES_H_
 #define NUVOTON_M2351_CRYPTO_AES_H_
@@ -18,6 +22,5 @@ void Nuvoton_M2351_crypto_init(uint8_t);
 void Nuvoton_M2351_crypto_setKey(uint32_t *, uint32_t *);
 void Nuvoton_M2351_encrypt_data(uint8_t *, uint8_t *);
 void Nuvoton_M2351_decrypt_data(uint8_t *, uint8_t *);
-void print_Block(uint8_t *);
 
-#endif /* MODULE_CRYPTO_AES_H_ */
+#endif /* NUVOTON_M2351_CRYPTO_AES_H_ */

@@ -1,7 +1,7 @@
 /**************************************************************************//**
  * @file     main_ns.c
  * @version  V1.00
- * @brief    Non-secure sample code for TrustZone
+ * @brief    Non-secure main code for TrustZone OSCORE
  *
  * @note
  * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
@@ -15,82 +15,18 @@
 
 typedef int32_t (*funcptr)(uint32_t);
 
-
-extern int32_t Secure_func(void);
 void App_Init(uint32_t u32BootBase);
 void DEBUG_PORT_Init(void);
-
-
 
 /*----------------------------------------------------------------------------
   NonSecure Callable Functions from Secure Region
  *----------------------------------------------------------------------------*/
-extern int32_t Secure_LED_On_callback(int32_t (*)(uint32_t));
-extern int32_t Secure_LED_Off_callback(int32_t (*)(uint32_t));
-extern int32_t Secure_LED_On(uint32_t num);
-extern int32_t Secure_LED_Off(uint32_t num);
-
-/*----------------------------------------------------------------------------
-  NonSecure functions used for callbacks
- *----------------------------------------------------------------------------*/
-int32_t NonSecure_LED_On(uint32_t num)
-{
-    printf("Nonsecure LED On call by Secure\n");
-    PC0_NS = 0;
-    return 0;
-}
-
-int32_t NonSecure_LED_Off(uint32_t num)
-{
-    printf("Nonsecure LED Off call by Secure\n");
-    PC0_NS = 1;
-    return 0;
-}
-
-/*----------------------------------------------------------------------------
-  NonSecure LED control
- *----------------------------------------------------------------------------*/
-void LED_On(uint32_t us)
-{
-    printf("Nonsecure LED On\n");
-    PC1_NS = 0;
-}
-
-void LED_Off(uint32_t us)
-{
-    printf("Nonsecure LED Off\n");
-    PC1_NS = 1;
-}
-
-/*---------------------------------------------------------------------------------------------------------*/
-/* SysTick IRQ Handler                                                                                     */
-/*---------------------------------------------------------------------------------------------------------*/
-void SysTick_Handler(void)
-{
-    static uint32_t u32Ticks;
-
-    switch(u32Ticks++)
-    {
-        case   0:
-            LED_On(7u);
-            break;
-        case 200:
-            Secure_LED_On(6u);
-            break;
-        case 300:
-            LED_Off(7u);
-            break;
-        case 500:
-            Secure_LED_Off(6u);
-            break;
-        default:
-            if(u32Ticks > 600)
-            {
-                u32Ticks = 0;
-            }
-    }
-}
-
+extern int32_t Encrypt_data(uint8_t *plainData, uint8_t *cipheredData);
+extern int32_t Decrypt_data(uint8_t *cipheredData, uint8_t *resultData);
+extern void print_Block(uint8_t *block);
+extern void print2Secure(char *string);
+extern int32_t Secure_LED_On(void);
+extern int32_t Secure_LED_Off(void);
 
 
 /*----------------------------------------------------------------------------
@@ -100,28 +36,43 @@ int main(void)
 {
     DEBUG_PORT_Init();
 
-    printf("\n");
-    printf("+---------------------------------------------+\n");
-    printf("|           Nonsecure is running ...          |\n");
-    printf("+---------------------------------------------+\n");
-
-    Secure_func();
-
-    /* Init PC for Nonsecure LED control */
-    GPIO_SetMode(PC_NS, BIT1 | BIT0, GPIO_MODE_OUTPUT);
-
-    /* register NonSecure callbacks in Secure application */
-    Secure_LED_On_callback(&NonSecure_LED_On);
-    Secure_LED_Off_callback(&NonSecure_LED_Off);
-
-    /* Generate Systick interrupt each 10 ms */
-    SystemCoreClockUpdate();
-    SysTick_Config(SystemCoreClock / 100);
+    print2Secure("\n");
+    print2Secure("+---------------------------------------------+\n");
+    print2Secure("|           Nonsecure is running ...          |\n");
+    print2Secure("+---------------------------------------------+\n");
 
     XOM3_Func(3);
-
     XOM2_Func(2);
 
+    Secure_LED_On();
+
+    __attribute__((aligned(4))) uint8_t plainData[16] = {0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x07, 0x34};
+    __attribute__((aligned(4))) uint8_t cipheredData[16] = {0};
+    __attribute__((aligned(4))) uint8_t resultData[16] = {0};
+
+    print2Secure("plain data.\n\n");
+    printf("&plainData  = %p\n",plainData);
+    print_Block(plainData);
+		CLK_SysTickLongDelay(2000000);
+		
+    int c = Encrypt_data(plainData, cipheredData);
+    print2Secure("AES encrypt done.\n\n");
+    printf("&cipheredData  = %p\n",cipheredData);
+    print_Block(cipheredData);
+		CLK_SysTickLongDelay(2000000);
+		
+    int r = Decrypt_data(cipheredData, resultData);
+    print2Secure("AES decrypt done.\n\n");
+    printf("&resultData  = %p\n",resultData);
+    print_Block(resultData);
+		CLK_SysTickLongDelay(2000000);
+		
+    Secure_LED_Off();
+		
+
+		do {
+			__WFI();
+		}
     while(1);
 }
 

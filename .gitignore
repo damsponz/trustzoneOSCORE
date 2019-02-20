@@ -61,3 +61,4 @@ Secure/KEIL/Listings
 Secure/KEIL/Objects
 *.uvguix.*
 *.uvmpw.uvgui.*
+*.scvd

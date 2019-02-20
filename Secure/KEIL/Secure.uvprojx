@@ -139,7 +139,7 @@
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2V8M.DLL</Flash2>
           <Flash3>"" ()</Flash3>
-          <Flash4></Flash4>
+          <Flash4>.\nonsecure.ini</Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
           <pFcArmRoot></pFcArmRoot>
@@ -524,6 +524,11 @@
               <FileType>1</FileType>
               <FilePath>..\Nuvoton_M2351_crypto_aes.c</FilePath>
             </File>
+            <File>
+              <FileName>Oscore_crypto.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Oscore_crypto.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -568,6 +573,11 @@
               <FileName>xom1_func.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\include\xom1_func.h</FilePath>
+            </File>
+            <File>
+              <FileName>Oscore_crypto.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\include\Oscore_crypto.h</FilePath>
             </File>
           </Files>
         </Group>
