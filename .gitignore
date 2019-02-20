@@ -55,3 +55,9 @@ dkms.conf
 #exclude
 !/Secure/lib/*
 
+NonSecure/KEIL/Objects
+NonSecure/KEIL/Listings
+Secure/KEIL/Listings
+Secure/KEIL/Objects
+*.uvguix.*
+*.uvmpw.uvgui.*

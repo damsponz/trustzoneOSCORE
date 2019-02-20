@@ -73,7 +73,7 @@
         <LExpSel>0</LExpSel>
       </OPTXL>
       <OPTFL>
-        <tvExp>0</tvExp>
+        <tvExp>1</tvExp>
         <tvExpOptDlg>0</tvExpOptDlg>
         <IsCurrentTarget>1</IsCurrentTarget>
       </OPTFL>
@@ -103,7 +103,7 @@
         <bEvRecOn>1</bEvRecOn>
         <bSchkAxf>0</bSchkAxf>
         <bTchkAxf>0</bTchkAxf>
-        <nTsel>7</nTsel>
+        <nTsel>20</nTsel>
         <sDll></sDll>
         <sDllPa></sDllPa>
         <sDlgDll></sDlgDll>
@@ -114,13 +114,18 @@
         <tDlgDll></tDlgDll>
         <tDlgPa></tDlgPa>
         <tIfile>debug.ini</tIfile>
-        <pMon>NULink\Nu_Link.dll</pMon>
+        <pMon>Bin\Nu_Link.dll</pMon>
       </DebugOpt>
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
+          <Key>Nu_Link</Key>
+          <Name></Name>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
           <Key>UL2V8M</Key>
-          <Name>UL2V8M(-S0 -C0 -P0  -FN1 -FC1000 -FD20000000 -FF0M2351_AP_512 -FL080000 -FS00 -FP0($$Device:M2351KIAAEES$Flash\M2351_AP_512.FLM)</Name>
+          <Name>UL2V8M(-S0 -C0 -P0  -FN1 -FC1000 -FD20000000 -FF0M2351_AP_512 -FL080000 -FS00 -FP0($$Device:M2351KIAAE$Flash\M2351_AP_512.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -162,7 +167,7 @@
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\..\..\..\..\Library\Device\Nuvoton\M2351\Source\ARM\startup_M2351.s</Filename>
+          <Filename>C:\Users\dso\Library\Device\Nuvoton\M2351\Source\ARM\startup_M2351.s</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\Secure\../../../../../Library/Device/Nuvoton/M2351/Source/ARM/startup_M2351.s\221</Expression>
         </Bp>
@@ -222,7 +227,7 @@
 
   <Group>
     <GroupName>CMSIS</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -233,7 +238,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\Device\Nuvoton\M2351\Source\system_M2351.c</PathWithFileName>
+      <PathWithFileName>..\..\Library\Device\Nuvoton\M2351\Source\system_M2351.c</PathWithFileName>
       <FilenameWithoutPath>system_M2351.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -245,7 +250,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\Device\Nuvoton\M2351\Source\ARM\startup_M2351.s</PathWithFileName>
+      <PathWithFileName>..\..\Library\Device\Nuvoton\M2351\Source\ARM\startup_M2351.s</PathWithFileName>
       <FilenameWithoutPath>startup_M2351.s</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -254,7 +259,7 @@
 
   <Group>
     <GroupName>User</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -306,26 +311,26 @@
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
-  </Group>
-
-  <Group>
-    <GroupName>Library</GroupName>
-    <tvExp>0</tvExp>
-    <tvExpOptDlg>0</tvExpOptDlg>
-    <cbSel>0</cbSel>
-    <RteFlg>0</RteFlg>
     <File>
-      <GroupNumber>3</GroupNumber>
+      <GroupNumber>2</GroupNumber>
       <FileNumber>7</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\StdDriver\src\retarget.c</PathWithFileName>
-      <FilenameWithoutPath>retarget.c</FilenameWithoutPath>
+      <PathWithFileName>..\Nuvoton_M2351_crypto_aes.c</PathWithFileName>
+      <FilenameWithoutPath>Nuvoton_M2351_crypto_aes.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
+  </Group>
+
+  <Group>
+    <GroupName>Library</GroupName>
+    <tvExp>1</tvExp>
+    <tvExpOptDlg>0</tvExpOptDlg>
+    <cbSel>0</cbSel>
+    <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>3</GroupNumber>
       <FileNumber>8</FileNumber>
@@ -333,8 +338,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\StdDriver\src\clk.c</PathWithFileName>
-      <FilenameWithoutPath>clk.c</FilenameWithoutPath>
+      <PathWithFileName>..\..\Library\StdDriver\src\retarget.c</PathWithFileName>
+      <FilenameWithoutPath>retarget.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -345,11 +350,87 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\StdDriver\src\gpio.c</PathWithFileName>
+      <PathWithFileName>..\..\Library\StdDriver\src\clk.c</PathWithFileName>
+      <FilenameWithoutPath>clk.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>10</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\..\Library\StdDriver\src\gpio.c</PathWithFileName>
       <FilenameWithoutPath>gpio.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
+    <File>
+      <GroupNumber>3</GroupNumber>
+      <FileNumber>11</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\..\Library\StdDriver\src\crypto.c</PathWithFileName>
+      <FilenameWithoutPath>crypto.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+  </Group>
+
+  <Group>
+    <GroupName>include</GroupName>
+    <tvExp>1</tvExp>
+    <tvExpOptDlg>0</tvExpOptDlg>
+    <cbSel>0</cbSel>
+    <RteFlg>0</RteFlg>
+    <File>
+      <GroupNumber>4</GroupNumber>
+      <FileNumber>12</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\include\Nuvoton_M2351_crypto_aes.h</PathWithFileName>
+      <FilenameWithoutPath>Nuvoton_M2351_crypto_aes.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>4</GroupNumber>
+      <FileNumber>13</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\include\xom0_func.h</PathWithFileName>
+      <FilenameWithoutPath>xom0_func.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>4</GroupNumber>
+      <FileNumber>14</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\include\xom1_func.h</PathWithFileName>
+      <FilenameWithoutPath>xom1_func.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+  </Group>
+
+  <Group>
+    <GroupName>tinycrypt</GroupName>
+    <tvExp>0</tvExp>
+    <tvExpOptDlg>0</tvExpOptDlg>
+    <cbSel>0</cbSel>
+    <RteFlg>0</RteFlg>
   </Group>
 
 </ProjectOpt>

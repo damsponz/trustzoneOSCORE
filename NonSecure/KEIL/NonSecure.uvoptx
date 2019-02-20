@@ -73,7 +73,7 @@
         <LExpSel>0</LExpSel>
       </OPTXL>
       <OPTFL>
-        <tvExp>0</tvExp>
+        <tvExp>1</tvExp>
         <tvExpOptDlg>0</tvExpOptDlg>
         <IsCurrentTarget>1</IsCurrentTarget>
       </OPTFL>
@@ -103,7 +103,7 @@
         <bEvRecOn>1</bEvRecOn>
         <bSchkAxf>0</bSchkAxf>
         <bTchkAxf>0</bTchkAxf>
-        <nTsel>7</nTsel>
+        <nTsel>20</nTsel>
         <sDll></sDll>
         <sDllPa></sDllPa>
         <sDlgDll></sDlgDll>
@@ -114,13 +114,18 @@
         <tDlgDll></tDlgDll>
         <tDlgPa></tDlgPa>
         <tIfile></tIfile>
-        <pMon>NULink\Nu_Link.dll</pMon>
+        <pMon>Bin\Nu_Link.dll</pMon>
       </DebugOpt>
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
+          <Key>Nu_Link</Key>
+          <Name></Name>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
           <Key>UL2V8M</Key>
-          <Name>UL2V8M(-S0 -C0 -P0  -FN1 -FC1000 -FD20000000 -FF0M2351_AP_512 -FL080000 -FS00 -FP0($$Device:M2351KIAAEES$Flash\M2351_AP_512.FLM)</Name>
+          <Name>UL2V8M(-S0 -C0 -P0  -FN1 -FC1000 -FD20000000 -FF0M2351_AP_512 -FL080000 -FS00 -FP0($$Device:M2351KIAAE$Flash\M2351_AP_512.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -194,19 +199,12 @@
       <pszMrulep></pszMrulep>
       <pSingCmdsp></pSingCmdsp>
       <pMultCmdsp></pMultCmdsp>
-      <DebugDescription>
-        <Enable>1</Enable>
-        <EnableFlashSeq>0</EnableFlashSeq>
-        <EnableLog>0</EnableLog>
-        <Protocol>2</Protocol>
-        <DbgClock>5000000</DbgClock>
-      </DebugDescription>
     </TargetOption>
   </Target>
 
   <Group>
     <GroupName>CMSIS</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -217,7 +215,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\Device\Nuvoton\M2351\Source\system_M2351.c</PathWithFileName>
+      <PathWithFileName>..\..\Library\Device\Nuvoton\M2351\Source\system_M2351.c</PathWithFileName>
       <FilenameWithoutPath>system_M2351.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -229,7 +227,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\Device\Nuvoton\M2351\Source\ARM\startup_M2351.s</PathWithFileName>
+      <PathWithFileName>..\..\Library\Device\Nuvoton\M2351\Source\ARM\startup_M2351.s</PathWithFileName>
       <FilenameWithoutPath>startup_M2351.s</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -238,7 +236,7 @@
 
   <Group>
     <GroupName>User</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -282,7 +280,7 @@
 
   <Group>
     <GroupName>Library</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -293,7 +291,7 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\StdDriver\src\retarget.c</PathWithFileName>
+      <PathWithFileName>..\..\Library\StdDriver\src\retarget.c</PathWithFileName>
       <FilenameWithoutPath>retarget.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
@@ -301,27 +299,35 @@
     <File>
       <GroupNumber>3</GroupNumber>
       <FileNumber>7</FileNumber>
-      <FileType>3</FileType>
+      <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\Secure\lib\nsclib_Secure.o</PathWithFileName>
-      <FilenameWithoutPath>nsclib_Secure</FilenameWithoutPath>
+      <PathWithFileName>..\..\Library\StdDriver\src\gpio.c</PathWithFileName>
+      <FilenameWithoutPath>gpio.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
     <File>
       <GroupNumber>3</GroupNumber>
       <FileNumber>8</FileNumber>
-      <FileType>1</FileType>
+      <FileType>3</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\..\..\..\..\Library\StdDriver\src\gpio.c</PathWithFileName>
-      <FilenameWithoutPath>gpio.c</FilenameWithoutPath>
+      <PathWithFileName>..\..\Secure\lib\nsclib_Secure.o</PathWithFileName>
+      <FilenameWithoutPath>nsclib_Secure.o</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
+  </Group>
+
+  <Group>
+    <GroupName>include</GroupName>
+    <tvExp>0</tvExp>
+    <tvExpOptDlg>0</tvExpOptDlg>
+    <cbSel>0</cbSel>
+    <RteFlg>0</RteFlg>
   </Group>
 
 </ProjectOpt>
