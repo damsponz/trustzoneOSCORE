@@ -9,12 +9,12 @@
  ******************************************************************************/
 
 #include <arm_cmse.h>
+#include <Nuvoton_M2351_crypto_aes.h>
 #include <stdio.h>
 #include "NuMicro.h"                      /* Device header */
 #include "partition_M2351.h"
 #include "xom0_func.h"
 #include "xom1_func.h"
-#include "module_crypto_aes.h"
 
 
 #define NEXT_BOOT_BASE  0x10040000
@@ -197,19 +197,6 @@ int main(void)
 
     printf("Secure is running ...\n");
 
-    /* Init GPIO Port A for secure LED control */
-    GPIO_SetMode(PA, BIT11 | BIT10, GPIO_MODE_OUTPUT);
-
-    /* Init GPIO Port B for secure LED control */
-    GPIO_SetMode(PB, BIT1 | BIT0, GPIO_MODE_OUTPUT);
-
-    /* Generate Systick interrupt each 10 ms */
-//    SysTick_Config(SystemCoreClock / 100);
-
-    /* Set GPIO Port C to non-secure for LED control */
-
-//    SCU_SET_IONSSET(SCU_IONSSET_PC_Msk);
-
     XOM1_Func(1);
     XOM0_Func(0);
 
@@ -237,9 +224,9 @@ int main(void)
 	printf("&plainData  = %p\n",plainData);
 	print_Block(plainData);
 
-	OSCORE_crypto_init(ENCRYPT);
-	OSCORE_crypto_SetKey(au32AESKey,au32AESIV);
-    AES_ONE_BLOCK_encrypt_data(plainData, cipheredData);
+	Nuvoton_M2351_crypto_init(ENCRYPT);
+	Nuvoton_M2351_crypto_setKey(au32AESKey,au32AESIV);
+	Nuvoton_M2351_encrypt_data(plainData, cipheredData);
 
     printf("AES encrypt done.\n\n");
 	printf("&cipheredData  = %p\n",cipheredData);
@@ -249,19 +236,33 @@ int main(void)
      *  AES-128 ECB mode decrypt
      *---------------------------------------*/
 
-	OSCORE_crypto_init(DECRYPT);
-	OSCORE_crypto_SetKey(au32AESKey,au32AESIV);
-    AES_ONE_BLOCK_decrypt_data(cipheredData, resultData);
+    Nuvoton_M2351_crypto_init(DECRYPT);
+    Nuvoton_M2351_crypto_setKey(au32AESKey,au32AESIV);
+	Nuvoton_M2351_decrypt_data(cipheredData, resultData);
 
     printf("AES decrypt done.\n\n");
     printf("&resultData  = %p\n",resultData);
     print_Block(resultData);
 
+    /* Init GPIO Port A for secure LED control */
+    GPIO_SetMode(PA, BIT11 | BIT10, GPIO_MODE_OUTPUT);
 
+    /* Init GPIO Port B for secure LED control */
+    GPIO_SetMode(PB, BIT1 | BIT0, GPIO_MODE_OUTPUT);
 
-//    Boot_Init(NEXT_BOOT_BASE);
+    /* Generate Systick interrupt each 10 ms */
+    SysTick_Config(SystemCoreClock / 100);
 
-    //while(1);
+    /* Set GPIO Port C to non-secure for LED control */
+    SCU_SET_IONSSET(SCU_IONSSET_PC_Msk);
+
+    Boot_Init(NEXT_BOOT_BASE);
+
+    do
+    {
+        __WFI();
+    }
+    while(1);
 
 }
 

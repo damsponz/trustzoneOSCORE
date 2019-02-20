@@ -31,6 +31,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>tinycrypt</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>Library/_syscalls.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Library/Device/Nuvoton/M2351/Source/GCC/_syscalls.c</locationURI>
@@ -54,6 +59,16 @@
 			<name>Library/system_M2351.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Library/Device/Nuvoton/M2351/Source/system_M2351.c</locationURI>
+		</link>
+		<link>
+			<name>tinycrypt/include</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/tinycrypt/lib/include/tinycrypt</locationURI>
+		</link>
+		<link>
+			<name>tinycrypt/source</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/tinycrypt/lib/source</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

@@ -148,6 +148,7 @@ void App_Init(uint32_t u32BootBase)
 
     /* Check if the stack is in secure SRAM space */
     u32StackBase = M32(u32BootBase);
+    printf("u32StackBase = %x",u32StackBase);
     if((u32StackBase >= 0x30000000UL) && (u32StackBase < 0x40000000UL))
     {
         printf("Execute non-secure code ...\n");
