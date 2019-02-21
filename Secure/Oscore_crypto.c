@@ -12,14 +12,14 @@
  *----------------------------------------------------------------------------*/
 int32_t LED_On(void)
 {
-    printf("Secure LED On\n");
+    //printf("Secure LED On\n");
     PA11 = 0;
     return 1;
 }
 
 int32_t LED_Off(void)
 {
-    printf("Secure LED Off\n");
+    //printf("Secure LED Off\n");
     PA11 = 1;
     return 1;
 }
@@ -47,7 +47,8 @@ int32_t Secure_LED_Off(void)
 __NONSECURE_ENTRY
 int32_t Encrypt_data(uint8_t *plainData, uint8_t *cipheredData) {
 
-    LED_On();	
+    printf("|           Secure is running ...          |\n");
+    LED_On();
     printf("Encrypt_data NSC func\n");
     
     __attribute__((aligned(4))) uint32_t au32AESKey[4] =
@@ -59,13 +60,13 @@ int32_t Encrypt_data(uint8_t *plainData, uint8_t *cipheredData) {
         0x00000000, 0x00000000, 0x00000000, 0x00000000
     };
 
-    printf("&plainData  = %p\n",plainData);
+    printf("&plainData  = %p",plainData);
 
     Nuvoton_M2351_crypto_init(ENCRYPT);
     Nuvoton_M2351_crypto_setKey(au32AESKey,au32AESIV);
     Nuvoton_M2351_encrypt_data(plainData, cipheredData);
 		
-		printf("&cipheredData  = %p\n",cipheredData);
+	printf("&cipheredData  = %p",cipheredData);
 
     LED_Off();
     return (int32_t)cipheredData;
@@ -73,6 +74,7 @@ int32_t Encrypt_data(uint8_t *plainData, uint8_t *cipheredData) {
 __NONSECURE_ENTRY
 int32_t Decrypt_data(uint8_t *cipheredData, uint8_t *resultData) {
 
+    printf("|           Secure is running ...          |\n");
     LED_On();	
     printf("Decrypt_data NSC func\n");
 	
@@ -89,7 +91,7 @@ int32_t Decrypt_data(uint8_t *cipheredData, uint8_t *resultData) {
     Nuvoton_M2351_crypto_setKey(au32AESKey,au32AESIV);
     Nuvoton_M2351_decrypt_data(cipheredData, resultData);
 
-    printf("&resultData  = %p\n",resultData);
+    printf("&resultData  = %p",resultData);
 
     LED_Off();	
     return (int32_t)resultData;

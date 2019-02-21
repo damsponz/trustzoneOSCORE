@@ -50,22 +50,40 @@ int main(void)
     __attribute__((aligned(4))) uint8_t cipheredData[16] = {0};
     __attribute__((aligned(4))) uint8_t resultData[16] = {0};
 
-    print2Secure("plain data.\n\n");
     printf("&plainData  = %p\n",plainData);
     print_Block(plainData);
-		CLK_SysTickLongDelay(2000000);
-		
+    CLK_SysTickLongDelay(2000000);
+	
+    print2Secure("AES encrypt start.\n");
     int c = Encrypt_data(plainData, cipheredData);
-    print2Secure("AES encrypt done.\n\n");
+    print2Secure("AES encrypt done.\n");
     printf("&cipheredData  = %p\n",cipheredData);
     print_Block(cipheredData);
-		CLK_SysTickLongDelay(2000000);
-		
+	CLK_SysTickLongDelay(2000000);
+	
+    print2Secure("AES decrypt start.\n");
     int r = Decrypt_data(cipheredData, resultData);
-    print2Secure("AES decrypt done.\n\n");
+    print2Secure("AES decrypt done.\n");
     printf("&resultData  = %p\n",resultData);
     print_Block(resultData);
-		CLK_SysTickLongDelay(2000000);
+	CLK_SysTickLongDelay(2000000);
+
+    uint8_t error = 0;
+    for (uint8_t i = 0 ; i < 16 ; i++) {
+
+        if (resultData[i] != plainData[i]) {
+
+            error++;
+
+        }
+
+    }
+    if (error != 0) {
+
+        print2Secure("Error plainData is not equal to resultData");
+
+    }
+    else print2Secure("No error plainData is equal to resultData");
 		
     Secure_LED_Off();
 		

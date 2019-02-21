@@ -36,7 +36,7 @@ void Nuvoton_M2351_crypto_setKey(uint32_t InputKey[],uint32_t InputIv[]) {
 
 void Nuvoton_M2351_encrypt_data(uint8_t InputData[], uint8_t OutputData[]) {
 
-	printf("encrypt function.\n");
+	printf("AES ECB encrypt Start.\n");
 
 	//printf("&inputData  = %p\n",InputData);
 	//printf("&outputData  = %p\n",OutputData);
@@ -65,8 +65,6 @@ void Nuvoton_M2351_encrypt_data(uint8_t InputData[], uint8_t OutputData[]) {
 }
 
 void Nuvoton_M2351_decrypt_data(uint8_t InputData[], uint8_t OutputData[]) {
-
-	printf("decrypt function.\n");
 
 	/*
 	printf("&inputData  = %p\n",InputData);

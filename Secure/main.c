@@ -75,7 +75,7 @@ void Boot_Init(uint32_t u32BootBase)
     /* Check if the Reset_Handler address is in Non-secure space */
     if(cmse_is_nsfptr(fp) && (((uint32_t)fp & 0xf0000000) == 0x10000000))
     {
-        printf("Execute non-secure code ...\n");
+        printf("Next Boot to non-secure code ...\n");
         fp(0); /* Non-secure function call */
     }
     else
