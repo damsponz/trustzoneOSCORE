@@ -11,6 +11,12 @@
 #include "NuMicro.h"
 #include "Nuvoton_M2351_crypto_aes.h"
 
+#define OSCORE_CRYPTO_SUCCESS 1
+#define OSCORE_CRYPTO_FAIL 0
+
+extern uint8_t cipheredSessionKey[16];
+extern uint8_t sessionIv[16];
+
 /* typedef for NonSecure callback functions */
 typedef __NONSECURE_CALL int32_t (*NonSecure_funcptr)(uint32_t);
 typedef int32_t (*Secure_funcptr)(uint32_t);
@@ -20,9 +26,13 @@ int32_t Encrypt_data(uint8_t *,uint8_t *);
 __NONSECURE_ENTRY
 int32_t Decrypt_data(uint8_t *,uint8_t *);
 __NONSECURE_ENTRY
+int32_t Store_key(uint8_t *);
+__NONSECURE_ENTRY
+int32_t Store_iv(uint8_t *);
+__NONSECURE_ENTRY
 int32_t print_Block(uint8_t *);
 __NONSECURE_ENTRY
-int32_t print2Secure(char *);
+int32_t print2Secure(char *,uint8_t *);
 __NONSECURE_ENTRY
 int32_t Secure_LED_On(void);
 __NONSECURE_ENTRY

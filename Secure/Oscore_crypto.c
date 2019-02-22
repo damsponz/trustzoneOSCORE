@@ -20,6 +20,7 @@ int32_t LED_On(void)
 int32_t LED_Off(void)
 {
     //printf("Secure LED Off\n");
+		CLK_SysTickLongDelay(200000);
     PA11 = 1;
     return 1;
 }
@@ -47,54 +48,70 @@ int32_t Secure_LED_Off(void)
 __NONSECURE_ENTRY
 int32_t Encrypt_data(uint8_t *plainData, uint8_t *cipheredData) {
 
-    printf("|           Secure is running ...          |\n");
-    LED_On();
-    printf("Encrypt_data NSC func\n");
-    
-    __attribute__((aligned(4))) uint32_t au32AESKey[4] =
-    {
-        0x2b7e1516, 0x28aed2a6, 0xabf71588, 0x09cf4f3c
-    };
-    __attribute__((aligned(4))) uint32_t au32AESIV[4] =
-    {
-        0x00000000, 0x00000000, 0x00000000, 0x00000000
-    };
+    if (DEMO) printf("|     Secure is running ... Encrypt_data      |\n");
+    if (DEMO) LED_On();
 
-    printf("&plainData  = %p",plainData);
+    Nuvoton_M2351_crypto_init(0, ENCRYPT);
+    Nuvoton_M2351_crypto_useSessionKey(0);
+    Nuvoton_M2351_encrypt_data(0, plainData, cipheredData);
 
-    Nuvoton_M2351_crypto_init(ENCRYPT);
-    Nuvoton_M2351_crypto_setKey(au32AESKey,au32AESIV);
-    Nuvoton_M2351_encrypt_data(plainData, cipheredData);
-		
-	printf("&cipheredData  = %p",cipheredData);
-
-    LED_Off();
+    if (DEMO) LED_Off();
     return (int32_t)cipheredData;
 }
+
 __NONSECURE_ENTRY
 int32_t Decrypt_data(uint8_t *cipheredData, uint8_t *resultData) {
 
-    printf("|           Secure is running ...          |\n");
-    LED_On();	
-    printf("Decrypt_data NSC func\n");
-	
-	    __attribute__((aligned(4))) uint32_t au32AESKey[4] =
-    {
-        0x2b7e1516, 0x28aed2a6, 0xabf71588, 0x09cf4f3c
-    };
-    __attribute__((aligned(4))) uint32_t au32AESIV[4] =
-    {
-        0x00000000, 0x00000000, 0x00000000, 0x00000000
-    };
+    if (DEMO) printf("|     Secure is running ... Decrypt_data      |\n");
+    if (DEMO) LED_On();	
 
-    Nuvoton_M2351_crypto_init(DECRYPT);
-    Nuvoton_M2351_crypto_setKey(au32AESKey,au32AESIV);
-    Nuvoton_M2351_decrypt_data(cipheredData, resultData);
+    Nuvoton_M2351_crypto_init(0, DECRYPT);
+    Nuvoton_M2351_crypto_useSessionKey(0);
+    Nuvoton_M2351_decrypt_data(0, cipheredData, resultData);
 
-    printf("&resultData  = %p",resultData);
-
-    LED_Off();	
+    if (DEMO) LED_Off();	
     return (int32_t)resultData;
+}
+
+__NONSECURE_ENTRY
+int32_t Store_key(uint8_t *newKey) {
+
+    if (DEMO) printf("|      Secure is running ... Store_key        |\n");
+    if (DEMO) LED_On(); 
+
+    for (uint8_t z = 0; z < 16; z++) {
+
+        cipheredSessionKey[z] = newKey[z];
+
+        /* Reset memory */
+        newKey[z] = 0;
+
+    }
+
+    //printf("&cipheredSessionKey = %p\n", cipheredSessionKey);
+    //print_Block(cipheredSessionKey);
+
+    if (DEMO) LED_Off();    
+    return OSCORE_CRYPTO_SUCCESS;
+}
+
+__NONSECURE_ENTRY
+int32_t Store_iv(uint8_t *newIv) {
+
+    if (DEMO) printf("|      Secure is running ... Store_iv         |\n");
+    if (DEMO) LED_On(); 
+    
+    for (uint8_t z = 0; z < 16; z++) {
+
+        sessionIv[z] = newIv[z];
+
+        /* Reset memory */
+        newIv[z] = 0;
+
+    }
+
+    if (DEMO) LED_Off();    
+    return OSCORE_CRYPTO_SUCCESS;
 }
 
 __NONSECURE_ENTRY
@@ -117,9 +134,11 @@ int32_t print_Block(uint8_t *block) {
 }
 
 __NONSECURE_ENTRY
-int32_t print2Secure(char *string) {
+int32_t print2Secure(char *string, uint8_t *ptr) {
 
-    printf("%s",string);
+    if (ptr == NULL) printf("%s\n",string);
+		else printf(string,ptr);
 
-		return 1;
+	return 1;
+
 }

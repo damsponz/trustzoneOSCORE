@@ -18,9 +18,10 @@
 static volatile int32_t g_AES_done;
 
 void CRPT_IRQHandler(void);
-void Nuvoton_M2351_crypto_init(uint8_t);
-void Nuvoton_M2351_crypto_setKey(uint32_t *, uint32_t *);
-void Nuvoton_M2351_encrypt_data(uint8_t *, uint8_t *);
-void Nuvoton_M2351_decrypt_data(uint8_t *, uint8_t *);
+void Nuvoton_M2351_crypto_init(uint8_t, uint8_t);
+void Nuvoton_M2351_crypto_useSessionKey(uint8_t );
+void Nuvoton_M2351_crypto_useMasterKey(void);
+void Nuvoton_M2351_encrypt_data(uint8_t, uint8_t *, uint8_t *);
+void Nuvoton_M2351_decrypt_data(uint8_t, uint8_t *, uint8_t *);
 
 #endif /* NUVOTON_M2351_CRYPTO_AES_H_ */

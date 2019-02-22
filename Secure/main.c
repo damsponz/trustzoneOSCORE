@@ -109,10 +109,15 @@ int main(void)
     /* UART is configured as debug port */
     DEBUG_PORT_Init();
 
-    printf("\n");
-    printf("+---------------------------------------------+\n");
-    printf("|             Secure is running ...           |\n");
-    printf("+---------------------------------------------+\n");
+    if (DEMO) {
+        printf("\n");
+        printf("+---------------------------------------------+\n");
+        printf("|             Secure is running ...           |\n");
+        printf("+---------------------------------------------+\n");
+	}
+
+    //printf("&cipheredSessionKey = %p\n", cipheredSessionKey);
+    //print_Block((uint8_t *)cipheredSessionKey);
 
     XOM1_Func(1);
     XOM0_Func(0);
