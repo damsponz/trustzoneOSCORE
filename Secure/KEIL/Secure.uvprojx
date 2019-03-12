@@ -529,6 +529,11 @@
               <FileType>1</FileType>
               <FilePath>..\Oscore_crypto.c</FilePath>
             </File>
+            <File>
+              <FileName>Nuvoton_M2351_wifi_module.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Nuvoton_M2351_wifi_module.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -553,6 +558,11 @@
               <FileName>crypto.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\Library\StdDriver\src\crypto.c</FilePath>
+            </File>
+            <File>
+              <FileName>fmc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Library\StdDriver\src\fmc.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -579,10 +589,52 @@
               <FileType>5</FileType>
               <FilePath>..\include\Oscore_crypto.h</FilePath>
             </File>
+            <File>
+              <FileName>Nuvoton_M2351_wifi_module.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\include\Nuvoton_M2351_wifi_module.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>tinycrypt</GroupName>
+          <Files>
+            <File>
+              <FileName>ccm_mode.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\tinycrypt\ccm_mode.c</FilePath>
+            </File>
+            <File>
+              <FileName>Nuvoton_M2351_aes_tinycrypt.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\tinycrypt\Nuvoton_M2351_aes_tinycrypt.c</FilePath>
+            </File>
+            <File>
+              <FileName>utils.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\tinycrypt\utils.c</FilePath>
+            </File>
+            <File>
+              <FileName>aes.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\tinycrypt\include\aes.h</FilePath>
+            </File>
+            <File>
+              <FileName>ccm_mode.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\tinycrypt\include\ccm_mode.h</FilePath>
+            </File>
+            <File>
+              <FileName>constants.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\tinycrypt\include\constants.h</FilePath>
+            </File>
+            <File>
+              <FileName>utils.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\tinycrypt\include\utils.h</FilePath>
+            </File>
+          </Files>
         </Group>
       </Groups>
     </Target>

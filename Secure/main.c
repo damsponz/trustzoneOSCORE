@@ -10,12 +10,18 @@
 
 #include <arm_cmse.h>
 #include "Oscore_crypto.h"
+#include "Nuvoton_M2351_wifi_module.h"
 #include <stdio.h>
 #include "NuMicro.h"                      /* Device header */
 #include "partition_M2351.h"
 #include "xom0_func.h"
 #include "xom1_func.h"
 
+#include <string.h>
+#include "M2351.h"
+
+#define SW2             PB0
+#define SW3             PB1
 
 #define NEXT_BOOT_BASE  0x10040000
 #define JUMP_HERE       0xe7fee7ff      /* Instruction Code of "B ." */
@@ -96,7 +102,6 @@ void Boot_Init(uint32_t u32BootBase)
     }
 }
 
-
 /*----------------------------------------------------------------------------
   Main function
  *----------------------------------------------------------------------------*/
@@ -106,18 +111,9 @@ int main(void)
 
     SYS_Init();
 
-    /* UART is configured as debug port */
+    /* UART0 is configured as debug port */
     DEBUG_PORT_Init();
-
-    if (DEMO) {
-        printf("\n");
-        printf("+---------------------------------------------+\n");
-        printf("|             Secure is running ...           |\n");
-        printf("+---------------------------------------------+\n");
-	}
-
-    //printf("&cipheredSessionKey = %p\n", cipheredSessionKey);
-    //print_Block((uint8_t *)cipheredSessionKey);
+    WIFI_PORT_Init();
 
     XOM1_Func(1);
     XOM0_Func(0);
@@ -125,7 +121,61 @@ int main(void)
     /* Init GPIO Port A for secure LED control */
     GPIO_SetMode(PA, BIT11 | BIT10, GPIO_MODE_OUTPUT);
 
-    Boot_Init(NEXT_BOOT_BASE);
+    /* Enable debounce of PB0~1 */
+    PB->DBEN = 0x3;
+    PB->DBCTL |= GPIO_DBCTL_DBCLKSRC_Msk | 0x3;
+
+    if (DEMO) {
+        printf("+---------------------------------------------+\n");
+        printf("|             Secure is running ...           |\n");
+        printf("+---------------------------------------------+\n");
+	}
+
+    WIFI_PORT_Start();
+    
+    //printf("&cipheredSessionKey = %p\n", cipheredSessionKey);
+    //print_Block((uint8_t *)cipheredSessionKey);
+
+    char command_CWLIF[] = "AT+CWLIF\r\n";
+
+    while(1)
+    {
+
+        if(SW3 == 0)
+        {
+            while(SW3 == 0); //Attente du front descendant du bouton
+            Boot_Init(NEXT_BOOT_BASE);   
+        }
+
+
+        if(SW2 == 0)
+        {
+            while(SW2 == 0); //Attente du front descendant du bouton
+
+            WIFI_PORT_Write(0, command_CWLIF, (sizeof(command_CWLIF) / sizeof(char))-1);
+            WIFI_PORT_Read(1);
+
+            char charToSend[30] = "Response from Nuvoton Board !\n";
+            char *receive;
+
+            while(1) {
+
+                receive = WIFI_PORT_Receive_Data(0);
+                printf("\nData Received : %s\n", receive);
+                free(receive);
+                WIFI_PORT_Send_Data(1, charToSend, 30, "30", 2);
+
+                if(SW2 == 0)
+                {
+                    while(SW2 == 0); //Attente du front descendant du bouton
+                    break;
+                }
+
+            }
+   
+        }
+                
+    }
 
 }
 
@@ -148,14 +198,19 @@ void SYS_Init(void)
     /* Switch HCLK clock source to PLL */
     CLK->CLKSEL0 = (CLK->CLKSEL0 & (~CLK_CLKSEL0_HCLKSEL_Msk)) | CLK_CLKSEL0_HCLKSEL_PLL;
 
-    /* Enable UART clock */
-    CLK->APBCLK0 |= CLK_APBCLK0_UART0CKEN_Msk;
-
-    /* Enable Crypto Accelerator */
-    CLK->AHBCLK  |= CLK_AHBCLK_CRPTCKEN_Msk;
+    CLK->PWRCTL |= CLK_PWRCTL_HIRC48EN_Msk;
+    while((CLK->STATUS & CLK_STATUS_HIRC48STB_Msk) == 0);
+    CLK->CLKSEL0 = CLK_CLKSEL0_HCLKSEL_HIRC48;
 
     /* Select UART clock source */
     CLK->CLKSEL1 = (CLK->CLKSEL1 & (~CLK_CLKSEL1_UART0SEL_Msk)) | CLK_CLKSEL1_UART0SEL_HIRC;
+    CLK->CLKSEL3 = CLK_CLKSEL3_UART3SEL_HIRC;
+
+    /* Enable UART clock */
+    CLK->APBCLK0 |= CLK_APBCLK0_UART0CKEN_Msk | CLK_APBCLK0_TMR0CKEN_Msk | CLK_APBCLK0_UART1CKEN_Msk | CLK_APBCLK0_UART3CKEN_Msk;
+
+    /* Enable Crypto Accelerator */
+    CLK->AHBCLK  |= CLK_AHBCLK_CRPTCKEN_Msk;
 
     /* Update System Core Clock */
     /* User can use SystemCoreClockUpdate() to calculate PllClock, SystemCoreClock and CycylesPerUs automatically. */

@@ -39,11 +39,24 @@ void Nuvoton_M2351_crypto_useMasterKey() {
     /* Load Key */
     uint32_t  key_reg_addr;
     key_reg_addr = (uint32_t)&crpt->AES0_KEY[0] + (u32Channel * 0x3CUL);
+	
+	    /* Enable FMC ISP function */
+    FMC_Open();
+		
+	outpw(key_reg_addr, FMC_ReadUID(0));
+	outpw(key_reg_addr+4UL, FMC_ReadUID(1));
+	outpw(key_reg_addr+8UL, FMC_ReadUID(2));
+	outpw(key_reg_addr+12UL, FMC_ReadUID(0));
+	
+	//printf("\nmasterKey = %08x%08x%08x%08x\n",FMC_ReadUID(0),FMC_ReadUID(1),FMC_ReadUID(2),FMC_ReadUID(0));
 
-	outpw(key_reg_addr, 0x2b7e1516);
-	outpw(key_reg_addr+4UL, 0x28aed2a6);
-	outpw(key_reg_addr+8UL, 0xabf71588);
-	outpw(key_reg_addr+12UL, 0x09cf4f3c);
+    /* Disable FMC ISP function */
+    FMC_Close();
+
+	//outpw(key_reg_addr, 0x2b7e1516);
+	//outpw(key_reg_addr+4UL, 0x28aed2a6);
+	//outpw(key_reg_addr+8UL, 0xabf71588);
+	//outpw(key_reg_addr+12UL, 0x09cf4f3c);
 
     /* Load IV */
     uint32_t  iv_reg_addr;
