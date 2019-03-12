@@ -1,24 +1,25 @@
-/**************************************************************************//**
- * @file     main.c
- * @version  V1.00
- * @brief    Secure main code for TrustZone OSCORE
+/*########################################################
+ * @file       : main.c
+ * @version    : v1.00
+ * @created on : 5 fevrier 2019
+ * @updated on : 12 mars 2019
+ * @author     : Damien SOURSAS
  *
- * @note
- * AES
- *
- ******************************************************************************/
+ * @note       : Secure main code for TrustZone OSCORE
+/*########################################################*/
 
 #include <arm_cmse.h>
-#include "Oscore_crypto.h"
-#include "Nuvoton_M2351_wifi_module.h"
 #include <stdio.h>
+#include <string.h>
+
 #include "NuMicro.h"                      /* Device header */
 #include "partition_M2351.h"
 #include "xom0_func.h"
 #include "xom1_func.h"
-
-#include <string.h>
 #include "M2351.h"
+
+#include "Oscore.h"
+#include "Nuvoton_M2351_wifi_module.h"
 
 #define SW2             PB0
 #define SW3             PB1
@@ -53,10 +54,22 @@ int32_t Secure_LED_Off_callback(NonSecure_funcptr *callback)
 }
 */
 
-
 void SYS_Init(void);
 void DEBUG_PORT_Init(void);
 void Boot_Init(uint32_t u32BootBase);
+
+__NONSECURE_ENTRY
+int32_t Secure_SW2_Status(void) {
+    
+    return SW2;
+    
+}
+__NONSECURE_ENTRY
+int32_t Secure_SW3_Status(void){
+    
+    return SW3;
+    
+}
 
 /*----------------------------------------------------------------------------
     Boot_Init function is used to jump to next boot code.
@@ -131,12 +144,11 @@ int main(void)
         printf("+---------------------------------------------+\n");
 	}
 
+    /* Start and configure WiFi Module */
     WIFI_PORT_Start();
     
     //printf("&cipheredSessionKey = %p\n", cipheredSessionKey);
     //print_Block((uint8_t *)cipheredSessionKey);
-
-    char command_CWLIF[] = "AT+CWLIF\r\n";
 
     while(1)
     {
@@ -152,6 +164,7 @@ int main(void)
         {
             while(SW2 == 0); //Attente du front descendant du bouton
 
+            char command_CWLIF[] = "AT+CWLIF\r\n";
             WIFI_PORT_Write(0, command_CWLIF, (sizeof(command_CWLIF) / sizeof(char))-1);
             WIFI_PORT_Read(1);
 
@@ -164,13 +177,8 @@ int main(void)
                 printf("\nData Received : %s\n", receive);
                 free(receive);
                 WIFI_PORT_Send_Data(1, charToSend, 30, "30", 2);
-
-                if(SW2 == 0)
-                {
-                    while(SW2 == 0); //Attente du front descendant du bouton
-                    break;
-                }
-
+                break;
+                
             }
    
         }

@@ -51,6 +51,8 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# mac0S System
+.DS_Store
 
 #exclude
 !/Secure/lib/*

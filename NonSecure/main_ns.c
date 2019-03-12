@@ -1,12 +1,13 @@
-/**************************************************************************//**
- * @file     main_ns.c
- * @version  V1.00
- * @brief    Non-secure main code for TrustZone OSCORE
+/*########################################################
+ * @file       : main_ns.c
+ * @version    : v1.00
+ * @created on : 5 fevrier 2019
+ * @updated on : 12 mars 2019
+ * @author     : Damien SOURSAS
  *
- * @note
- * Copyright (C) 2016 Nuvoton Technology Corp. All rights reserved.
- *
- ******************************************************************************/
+ * @note       : Non-secure main code for TrustZone OSCORE
+/*########################################################*/
+
 
 #include <arm_cmse.h>
 #include "NuMicro.h"
@@ -28,7 +29,10 @@ extern void print_Block(uint8_t *block);
 extern void print2Secure(char *string, uint8_t *ptr);
 extern int32_t Secure_LED_On(void);
 extern int32_t Secure_LED_Off(void);
-
+extern int32_t Secure_SW2_Status(void);
+extern int32_t Secure_SW3_Status(void);
+extern char * WIFI_PORT_Receive_Data(int);
+extern int WIFI_PORT_Send_Data(int, char *, int, char *, int);
 
 /*----------------------------------------------------------------------------
   Main function
@@ -107,6 +111,26 @@ int main(void)
 	do {
         
 		__WFI();
+        
+        if(Secure_SW2_Status() == 0)
+        {
+            while(Secure_SW2_Status() == 0); //Attente du front descendant du bouton
+            char charToSend[30] = "Response from Nuvoton Board !\n";
+            char *receive;
+            
+            while(1) {
+                
+                receive = WIFI_PORT_Receive_Data(0);
+                printf("\nData Received : %s\n", receive);
+                free(receive);
+                WIFI_PORT_Send_Data(1, charToSend, 30, "30", 2);
+                break;
+                
+            }
+            
+        }
+        
+        
 	}
     while(1);
 

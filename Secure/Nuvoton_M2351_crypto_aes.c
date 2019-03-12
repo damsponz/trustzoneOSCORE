@@ -1,12 +1,15 @@
-/*
- * module_crypto_aes.c
+/*########################################################
+ * @file       : Nuvoton_M2351_crypto_aes.c
+ * @version    : v1.00
+ * @created on : 5 fevrier 2019
+ * @updated on : 12 mars 2019
+ * @author     : Damien SOURSAS
  *
- *  Created on: 5 févr. 2019
- *      Author: Damien SOURSAS
- */
+ * @note       : Crypto accelerator usage with AES-ECB
+/*########################################################*/
 
 #include "Nuvoton_M2351_crypto_aes.h"
-#include "Oscore_crypto.h"
+#include "Oscore.h"
 
 uint8_t cipheredSessionKey[16];
 uint8_t sessionIv[16];
@@ -104,6 +107,7 @@ void Nuvoton_M2351_crypto_useSessionKey(uint8_t channel) {
 
 }
 
+/* Function Nuvoton_M2351_encrypt_data is same as Nuvoton_M2351_decrypt_data */
 void Nuvoton_M2351_encrypt_data(uint8_t channel, uint8_t InputData[], uint8_t OutputData[]) {
 
 	//printf("AES ECB encrypt start.\n");
@@ -132,6 +136,7 @@ void Nuvoton_M2351_encrypt_data(uint8_t channel, uint8_t InputData[], uint8_t Ou
 
 }
 
+/* Function Nuvoton_M2351_decrypt_data is same as Nuvoton_M2351_encrypt_data */
 void Nuvoton_M2351_decrypt_data(uint8_t channel, uint8_t InputData[], uint8_t OutputData[]) {
 
 	//printf("AES ECB decrypt start.\n");

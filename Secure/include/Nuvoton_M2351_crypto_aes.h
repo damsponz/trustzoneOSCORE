@@ -1,9 +1,12 @@
-/*
- * Nuvoton_M2351_crypto_aes.h
+/*########################################################
+ * @file       : Nuvoton_M2351_crypto_aes.h
+ * @version    : v1.00
+ * @created on : 5 fevrier 2019
+ * @updated on : 12 mars 2019
+ * @author     : Damien SOURSAS
  *
- *  Created on: 5 févr. 2019
- *      Author: Damien SOURSAS
- */
+ * @note       : Header Crypto accelerator
+ /*########################################################*/
 
 #include <stdio.h>
 #include <string.h>
