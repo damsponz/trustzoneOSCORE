@@ -3,7 +3,7 @@
  * @file       : main_ns.c
  * @version    : v1.00
  * @created on : 5 fevrier 2019
- * @updated on : 12 mars 2019
+ * @updated on : 13 mars 2019
  * @author     : Damien SOURSAS
  *
  * @note       : Non-secure main code for TrustZone OSCORE
@@ -23,6 +23,7 @@ void DEBUG_PORT_Init(void);
 void testCryptDeCrypt(void);
 void stringKeyToKey(char *, uint8_t *);
 void keyToStringKey(uint8_t *, char *);
+void demoPres(void);
 
 struct NETWORKDATA {
     char *data;
@@ -101,14 +102,14 @@ int main(void)
 
 }
 
-demoPres(void) {
+void demoPres(void) {
 
     networkData *rec = malloc(sizeof(networkData));
     rec->data = malloc(sizeof(char)*33);
     (rec->data)[32] = '\0';
     rec->length = 0;
-    WIFI_PORT_Receive_Data(0,rec);
-    printSecure("#         Wait & listen on TCP 5386 ...       #",NULL,NULL);
+    WIFI_PORT_Receive_Data(1,rec);
+    printSecure("#         Wait & listen on port 5386 ...      #",NULL,NULL);
     printSecure("#            Ciphered Session Key ...         #",NULL,NULL);
     printSecure("#                                             #",NULL,NULL);
     printNetworkData(rec); 
@@ -126,7 +127,7 @@ demoPres(void) {
 
         CLK_SysTickLongDelay(500000);
         printSecure("#           Nonsecure is running ...          #",NULL,NULL);
-        printSecure("#         Wait & listen on TCP 5386 ...       #",NULL,NULL);
+        printSecure("#         Wait & listen on port 5386 ...      #",NULL,NULL);
 
         rec->length = 0;
         WIFI_PORT_Receive_Data(0,rec);     //NSC Function

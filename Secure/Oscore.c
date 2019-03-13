@@ -3,7 +3,7 @@
  * @file       : Oscore.c
  * @version    : v1.00
  * @created on : 20 fevrier 2019
- * @updated on : 12 mars 2019
+ * @updated on : 13 mars 2019
  * @author     : Damien SOURSAS
  *
  * @note       : Functions abstraction for OSCORE
@@ -303,11 +303,7 @@ int WIFI_PORT_Receive_Data(int print, networkData *netData)
         }
     }
 
-    //dataR[lengthData] = '\0';
-    //if (print) printf("data : %s\n", dataR);
-    //char *outData = malloc(sizeof(char)*(lengthData+1));
     for (int nb=0; nb <= lengthData; nb++) (netData->data)[nb] = dataR[nb];
-    //netData->data = outData;
     netData->length = lengthData;
 
     LED_G = 1;

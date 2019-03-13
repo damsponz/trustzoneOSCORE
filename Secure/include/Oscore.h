@@ -3,7 +3,7 @@
  * @file       : Oscore.h
  * @version    : v1.00
  * @created on : 20 fevrier 2019
- * @updated on : 12 mars 2019
+ * @updated on : 13 mars 2019
  * @author     : Damien SOURSAS
  *
  * @note       : Header functions abstraction for OSCORE

@@ -3,7 +3,7 @@
  * @file       : main.c
  * @version    : v1.00
  * @created on : 5 fevrier 2019
- * @updated on : 12 mars 2019
+ * @updated on : 13 mars 2019
  * @author     : Damien SOURSAS
  *
  * @note       : Secure main code for TrustZone OSCORE

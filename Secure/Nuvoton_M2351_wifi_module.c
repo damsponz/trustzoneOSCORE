@@ -3,7 +3,7 @@
  * @file       : Nuvoton_M2351_wifi_module.c
  * @version    : v1.00
  * @created on : 11 mars 2019
- * @updated on : 12 mars 2019
+ * @updated on : 13 mars 2019
  * @author     : Damien SOURSAS
  *
  * @note       : WiFi Module
@@ -54,6 +54,7 @@ void WIFI_PORT_Start()
     char command_CIPAP[] = "AT+CIPAP=\"192.168.4.254\"\r\n";
     char command_CIPMUX[] = "AT+CIPMUX=1\r\n";
     char command_CIPSERVER[] = "AT+CIPSERVER=1,5386\r\n";
+    char command_CIPSTART[] = "AT+CIPSTART=0,\"UDP\",\"0.0.0.0\",5386,5386,2\r\n";
     char command_CIPSTO[] = "AT+CIPSTO?\r\n";
     char buff;
     int ready = 0;
@@ -126,10 +127,14 @@ void WIFI_PORT_Start()
             WIFI_PORT_Write(0, command_CIPMUX, (sizeof(command_CIPMUX) / sizeof(char))-1);
             WIFI_PORT_Read(0);
             if (DEMO) printf("|  WiFi Multiple Server Connections Enabled   |\n");
-
+/*
             WIFI_PORT_Write(0, command_CIPSERVER, (sizeof(command_CIPSERVER) / sizeof(char))-1);
             WIFI_PORT_Read(0);
             if (DEMO) printf("|       Server TCP enabled on 5386 port       |\n");
+*/
+            WIFI_PORT_Write(0, command_CIPSTART, (sizeof(command_CIPSTART) / sizeof(char))-1);
+            WIFI_PORT_Read(0);
+            if (DEMO) printf("|       Server UDP enabled on 5386 port       |\n");
 
             //WIFI_PORT_Write(command_CIPSTO, (sizeof(command_CIPSTO) / sizeof(char))-1);
             //printf("WiFi Nuvoton Timeout is : \n");
