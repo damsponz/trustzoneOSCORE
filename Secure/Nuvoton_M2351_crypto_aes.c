@@ -1,4 +1,5 @@
-/*########################################################
+/*
+ *########################################################
  * @file       : Nuvoton_M2351_crypto_aes.c
  * @version    : v1.00
  * @created on : 5 fevrier 2019
@@ -6,7 +7,8 @@
  * @author     : Damien SOURSAS
  *
  * @note       : Crypto accelerator usage with AES-ECB
-/*########################################################*/
+ *########################################################
+*/
 
 #include "Nuvoton_M2351_crypto_aes.h"
 #include "Oscore.h"

@@ -525,9 +525,9 @@
               <FilePath>..\Nuvoton_M2351_crypto_aes.c</FilePath>
             </File>
             <File>
-              <FileName>Oscore_crypto.c</FileName>
+              <FileName>Oscore.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Oscore_crypto.c</FilePath>
+              <FilePath>..\Oscore.c</FilePath>
             </File>
             <File>
               <FileName>Nuvoton_M2351_wifi_module.c</FileName>
@@ -585,9 +585,9 @@
               <FilePath>..\include\xom1_func.h</FilePath>
             </File>
             <File>
-              <FileName>Oscore_crypto.h</FileName>
+              <FileName>Oscore.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\include\Oscore_crypto.h</FilePath>
+              <FilePath>..\include\Oscore.h</FilePath>
             </File>
             <File>
               <FileName>Nuvoton_M2351_wifi_module.h</FileName>

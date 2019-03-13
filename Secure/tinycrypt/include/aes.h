@@ -20,7 +20,7 @@
 #define __TC_AES_H__
 
 #include <stdint.h>
-#include "Oscore_crypto.h"
+#include "Oscore.h"
 
 #define Nb (4)  /* number of columns (32-bit words) comprising the state */
 #define Nk (4)  /* number of 32-bit words comprising the key */

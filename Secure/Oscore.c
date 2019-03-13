@@ -1,4 +1,5 @@
-/*########################################################
+/*
+ *########################################################
  * @file       : Oscore.c
  * @version    : v1.00
  * @created on : 20 fevrier 2019
@@ -6,7 +7,8 @@
  * @author     : Damien SOURSAS
  *
  * @note       : Functions abstraction for OSCORE
- /*########################################################*/
+ *########################################################
+*/
  
 #include "Oscore.h"
 
@@ -146,12 +148,22 @@ int32_t print_Block(uint8_t *block) {
 }
 
 __NONSECURE_ENTRY
-int32_t print2Secure(char *string, uint8_t *ptr) {
+int32_t print2Secure(char *string, void *ptr) {
 
     if (ptr == NULL) printf("%s\n",string);
 		else printf(string,ptr);
 
 	return 1;
+
+}
+
+__NONSECURE_ENTRY
+int32_t printNetworkData(networkData *netData) {
+
+    printf("Data   : %s\n",netData->data);
+    printf("Length : %d\n", netData->length);
+
+    return 1;
 
 }
 
@@ -161,12 +173,20 @@ int32_t print2Secure(char *string, uint8_t *ptr) {
  *----------------------------------------------------------------------------*/
 
 __NONSECURE_ENTRY
-int WIFI_PORT_Send_Data(int print, char *charToSend, int nChar, char *nbChar, int nbDigit)
+int WIFI_PORT_Send_Data(int print, networkData *netData)
 {
-    //char *charToSend  : in ASCII without '\0'
-    //int nChar         : nb of char in charToSend
-    //char *nbChar      : char list with nb of char in charToSend
-    //char *nbDigit     : nb digits in nbChar list
+
+    if (DEMO) printf("|      Secure is running ... Send Data        |\n");
+
+    int nbDigit = 1;
+    int tempLength = netData->length;
+    while (tempLength /= 10) nbDigit++;
+
+    char *nbChar = malloc(sizeof(char)*(nbDigit));
+    sprintf(nbChar,"%d",netData->length);
+    //printf("netData->length : %d\n", netData->length);
+    //printf("nbChar          : %s\n", nbChar);
+    //printf("nbDigit         : %d\n", nbDigit);
     
     LED_Y = 0;
     
@@ -177,9 +197,8 @@ int WIFI_PORT_Send_Data(int print, char *charToSend, int nChar, char *nbChar, in
     WIFI_PORT_Write(0, nbChar, nbDigit);
     WIFI_PORT_Write(0, cmdEnd, 2);
     WIFI_PORT_Read(0);
-    //printf("%s\n", charToSend);
-    //printf("%d",nChar);
-    WIFI_PORT_Write(0, charToSend, nChar);
+
+    WIFI_PORT_Write(0, netData->data, netData->length);
     WIFI_PORT_Write(0, cmdEnd, 2);
     WIFI_PORT_Read(0);
     if (print) printf("Data Sent !\n");
@@ -191,22 +210,24 @@ int WIFI_PORT_Send_Data(int print, char *charToSend, int nChar, char *nbChar, in
 }
 
 __NONSECURE_ENTRY
-char * WIFI_PORT_Receive_Data(int print)
+int WIFI_PORT_Receive_Data(int print, networkData *netData)
 {
-    
+
+    if (DEMO) printf("|    Secure is running ... Receive Data       |\n");
+
     LED_G = 0;
     char buff = 0;
-    int dataReceive = 0;
+    int isReceive = 0;
     int loop = 0;
     int indx = 0;
-    char dataR[300] = {0};
+    char dataR[64] = {0};
     int i = 0;
     int c = 0;
     int nbCharLength = 0;
     int lengthData = 0;
     int columnDetect = 0;
     
-    while (dataReceive == 0) {
+    while(isReceive == 0) {
         while((WIFI_PORT->FIFOSTS & UART_FIFOSTS_RXEMPTY_Msk) == 0) {
             loop = 0;
             buff = WIFI_PORT->DAT;
@@ -238,14 +259,14 @@ char * WIFI_PORT_Receive_Data(int print)
             else if (indx == 3 && loop == 0) indx = 0;
             
             if(indx == 4 && buff == ',' && loop == 0) {
-                dataReceive = 1;
+                isReceive = 1;
                 loop = 1;
                 //printf("%c",buff);
             }
             else if (indx == 4 && loop == 0) indx = 0;
         }
     }
-    while(dataReceive) {
+    while(isReceive) {
         while((WIFI_PORT->FIFOSTS & UART_FIFOSTS_RXEMPTY_Msk) == 0) {
             buff = WIFI_PORT->DAT;
             //printf("%c",buff);
@@ -255,7 +276,7 @@ char * WIFI_PORT_Receive_Data(int print)
                 if (print) printf("channel ID : %d\n", channelID);
                 
             }
-            if (c == 1 && buff != ',') dataReceive = 0; //ERROR
+            if (c == 1 && buff != ',') isReceive = 0; //ERROR
             //Data Read
             if (columnDetect && c < lengthData+3+nbCharLength) {
                 
@@ -276,14 +297,20 @@ char * WIFI_PORT_Receive_Data(int print)
                 }
                 
             }
-            if (columnDetect && c == lengthData+3+nbCharLength) dataReceive = 0;
+            if (columnDetect && c == lengthData+3+nbCharLength) isReceive = 0;
             c++;
         }
     }
+
     dataR[lengthData] = '\0';
     if (print) printf("data : %s\n", dataR);
     char *outData = malloc(sizeof(char)*(lengthData+1));
     for (int nb=0; nb <= lengthData; nb++) outData[nb] = dataR[nb];
+    netData->data = outData;
+    netData->length = lengthData;
+
     LED_G = 1;
-    return outData;
+
+    return 1;
+
 }

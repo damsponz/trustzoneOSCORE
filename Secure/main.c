@@ -1,4 +1,5 @@
-/*########################################################
+/*
+ *########################################################
  * @file       : main.c
  * @version    : v1.00
  * @created on : 5 fevrier 2019
@@ -6,11 +7,12 @@
  * @author     : Damien SOURSAS
  *
  * @note       : Secure main code for TrustZone OSCORE
-/*########################################################*/
+ *########################################################
+*/
 
 #include <arm_cmse.h>
 #include <stdio.h>
-#include <string.h>
+#include <stdlib.h>
 
 #include "NuMicro.h"                      /* Device header */
 #include "partition_M2351.h"
@@ -19,7 +21,7 @@
 #include "M2351.h"
 
 #include "Oscore.h"
-#include "Nuvoton_M2351_wifi_module.h"
+//#include "Nuvoton_M2351_wifi_module.h"
 
 #define SW2             PB0
 #define SW3             PB1
@@ -150,40 +152,8 @@ int main(void)
     //printf("&cipheredSessionKey = %p\n", cipheredSessionKey);
     //print_Block((uint8_t *)cipheredSessionKey);
 
-    while(1)
-    {
-
-        if(SW3 == 0)
-        {
-            while(SW3 == 0); //Attente du front descendant du bouton
-            Boot_Init(NEXT_BOOT_BASE);   
-        }
-
-
-        if(SW2 == 0)
-        {
-            while(SW2 == 0); //Attente du front descendant du bouton
-
-            char command_CWLIF[] = "AT+CWLIF\r\n";
-            WIFI_PORT_Write(0, command_CWLIF, (sizeof(command_CWLIF) / sizeof(char))-1);
-            WIFI_PORT_Read(1);
-
-            char charToSend[30] = "Response from Nuvoton Board !\n";
-            char *receive;
-
-            while(1) {
-
-                receive = WIFI_PORT_Receive_Data(0);
-                printf("\nData Received : %s\n", receive);
-                free(receive);
-                WIFI_PORT_Send_Data(1, charToSend, 30, "30", 2);
-                break;
-                
-            }
-   
-        }
-                
-    }
+    /* Boot to Non Secure World */
+    Boot_Init(NEXT_BOOT_BASE); 
 
 }
 
