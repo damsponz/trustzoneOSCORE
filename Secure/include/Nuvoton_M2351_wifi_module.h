@@ -1,12 +1,16 @@
 /*
- * Nuvoton_M2351_wifi_module.h
+ *########################################################
+ * @file       : Nuvoton_M2351_wifi_module.h
+ * @version    : v1.00
+ * @created on : 11 mars 2019
+ * @updated on : 12 mars 2019
+ * @author     : Damien SOURSAS
  *
- *  Created on: 11 mars. 2019
- *      Author: Damien SOURSAS
- */
+ * @note       : Header WiFi module
+ *########################################################
+*/
 
 #include <stdio.h>
-//#include <string.h>
 #include <stdlib.h>
 #include "NuMicro.h"
 
@@ -25,8 +29,6 @@
 void WIFI_PORT_Init();
 void WIFI_PORT_Start();
 void WIFI_PORT_Read(int);
-char * WIFI_PORT_Receive_Data(int);
-int WIFI_PORT_Send_Data(int, char *, int, char *, int);
 void WIFI_PORT_Write(int, char *, int);
 
 #endif /* NUVOTON_M2351_WIFI_MODULE_H_ */

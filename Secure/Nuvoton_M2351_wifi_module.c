@@ -1,9 +1,15 @@
 /*
- * Nuvoton_M2351_wifi_module.c
+ *########################################################
+ * @file       : Nuvoton_M2351_wifi_module.c
+ * @version    : v1.00
+ * @created on : 11 mars 2019
+ * @updated on : 13 mars 2019
+ * @author     : Damien SOURSAS
  *
- *  Created on: 11 mars. 2019
- *      Author: Damien SOURSAS
- */
+ * @note       : WiFi Module
+ *########################################################
+*/
+
 
 #include "Nuvoton_M2351_wifi_module.h"
 
@@ -48,7 +54,7 @@ void WIFI_PORT_Start()
     char command_CIPAP[] = "AT+CIPAP=\"192.168.4.254\"\r\n";
     char command_CIPMUX[] = "AT+CIPMUX=1\r\n";
     char command_CIPSERVER[] = "AT+CIPSERVER=1,5386\r\n";
-    //char command_CIPSTART[] = "AT+CIPSTART=0,\"UDP\",\"192.168.4.254\",8888\r\n";
+    char command_CIPSTART[] = "AT+CIPSTART=0,\"UDP\",\"0.0.0.0\",5386,5386,2\r\n";
     char command_CIPSTO[] = "AT+CIPSTO?\r\n";
     char buff;
     int ready = 0;
@@ -121,10 +127,14 @@ void WIFI_PORT_Start()
             WIFI_PORT_Write(0, command_CIPMUX, (sizeof(command_CIPMUX) / sizeof(char))-1);
             WIFI_PORT_Read(0);
             if (DEMO) printf("|  WiFi Multiple Server Connections Enabled   |\n");
-
+/*
             WIFI_PORT_Write(0, command_CIPSERVER, (sizeof(command_CIPSERVER) / sizeof(char))-1);
             WIFI_PORT_Read(0);
             if (DEMO) printf("|       Server TCP enabled on 5386 port       |\n");
+*/
+            WIFI_PORT_Write(0, command_CIPSTART, (sizeof(command_CIPSTART) / sizeof(char))-1);
+            WIFI_PORT_Read(0);
+            if (DEMO) printf("|       Server UDP enabled on 5386 port       |\n");
 
             //WIFI_PORT_Write(command_CIPSTO, (sizeof(command_CIPSTO) / sizeof(char))-1);
             //printf("WiFi Nuvoton Timeout is : \n");
@@ -178,126 +188,5 @@ void WIFI_PORT_Write(int print, char *command, int nbCharCommand)
     }
 
 }
-char * WIFI_PORT_Receive_Data(int print)
-{
 
-    LED_G = 0;
-    char buff = 0;
-    int dataReceive = 0;
-    int loop = 0;
-    int indx = 0;
-    char dataR[300] = {0};
-    int i = 0;
-    int c = 0;
-    int nbCharLength = 0;
-    int lengthData = 0;
-    int columnDetect = 0;
 
-    while (dataReceive == 0) {
-        while((WIFI_PORT->FIFOSTS & UART_FIFOSTS_RXEMPTY_Msk) == 0) {
-            loop = 0;
-            buff = WIFI_PORT->DAT;
-            //printf("%c",buff);
-            if(indx == 0 && buff == '+' && loop == 0) {
-                indx = 1;
-                loop = 1;
-                //printf("%c",buff);
-            }
-            if(indx == 1 && buff == 'I' && loop == 0) {
-                indx = 2;
-                loop = 1;
-                //printf("%c",buff);
-            }
-            else if (indx == 1 && loop == 0) indx = 0;
-
-            if(indx == 2 && buff == 'P' && loop == 0) {
-                indx = 3;
-                loop = 1;
-                //printf("%c",buff);
-            }
-            else if (indx == 2 && loop == 0) indx = 0;
-
-            if(indx == 3 && buff == 'D' && loop == 0) {
-                indx = 4;
-                loop = 1;
-                //printf("%c",buff);
-            }
-            else if (indx == 3 && loop == 0) indx = 0;
-
-            if(indx == 4 && buff == ',' && loop == 0) {
-                dataReceive = 1;
-                loop = 1;
-                //printf("%c",buff);
-            }
-            else if (indx == 4 && loop == 0) indx = 0;
-        } 
-    }
-    while(dataReceive) {
-        while((WIFI_PORT->FIFOSTS & UART_FIFOSTS_RXEMPTY_Msk) == 0) {
-            buff = WIFI_PORT->DAT;
-            //printf("%c",buff);
-            if (c == 0) {
-
-                uint8_t channelID = buff-0x30;
-                if (print) printf("channel ID : %d\n", channelID);
-
-            }
-            if (c == 1 && buff != ',') dataReceive = 0; //ERROR
-            //Data Read
-            if (columnDetect && c < lengthData+3+nbCharLength) {
-
-                dataR[c-(3+nbCharLength)] = buff;
-
-            }
-            //Length parse
-            if (c > 1 && columnDetect == 0) {
-
-                if (buff == ':') {
-                    columnDetect = 1;
-                    lengthData--;
-                    if (print) printf("lengthData : %d\n", lengthData);
-                }
-                else {
-                    lengthData = 10*lengthData+buff-0x30;
-                    nbCharLength++;
-                }
-
-            }
-            if (columnDetect && c == lengthData+3+nbCharLength) dataReceive = 0;
-            c++;
-        }
-    }
-    dataR[lengthData] = '\0';
-    if (print) printf("data : %s\n", dataR);
-    char *outData = malloc(sizeof(char)*(lengthData+1));
-    for (int nb=0; nb <= lengthData; nb++) outData[nb] = dataR[nb];
-    LED_G = 1;
-	return outData;
-}
-
-int WIFI_PORT_Send_Data(int print, char *charToSend, int nChar, char *nbChar, int nbDigit)
-{
-    //charToSend  : in ASCII without '\0'
-    //nbChar      : nb of char in charToSend
-
-    LED_Y = 0;
-
-    char cmd[13] = "AT+CIPSEND=0,";
-    char cmdEnd[2] = "\r\n";
-
-    WIFI_PORT_Write(0, cmd, (sizeof(cmd) / sizeof(char)));
-    WIFI_PORT_Write(0, nbChar, nbDigit);
-    WIFI_PORT_Write(0, cmdEnd, 2);
-    WIFI_PORT_Read(0);
-    //printf("%s\n", charToSend);
-	//printf("%d",nChar);
-    WIFI_PORT_Write(0, charToSend, nChar);
-    WIFI_PORT_Write(0, cmdEnd, 2);
-    WIFI_PORT_Read(0);
-    if (print) printf("Data Sent !\n");
-
-    LED_Y = 1;
-
-    return 1;
-
-}
