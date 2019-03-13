@@ -46,9 +46,9 @@ int32_t Store_iv(uint8_t *);
 
 /* Print */
 __NONSECURE_ENTRY
-int32_t print_Block(uint8_t *);
+int32_t printBlock(uint8_t *);
 __NONSECURE_ENTRY
-int32_t print2Secure(char *,void *);
+int32_t printSecure(char *,void *,uint8_t);
 __NONSECURE_ENTRY
 int32_t printNetworkData(networkData *);
 

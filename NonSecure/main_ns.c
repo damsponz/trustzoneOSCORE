@@ -21,6 +21,8 @@ typedef int32_t (*funcptr)(uint32_t);
 
 void DEBUG_PORT_Init(void);
 void testCryptDeCrypt(void);
+void stringKeyToKey(char *, uint8_t *);
+void keyToStringKey(uint8_t *, char *);
 
 struct NETWORKDATA {
     char *data;
@@ -35,8 +37,8 @@ extern int32_t Encrypt_data(uint8_t *plainData, uint8_t *cipheredData);
 extern int32_t Decrypt_data(uint8_t *cipheredData, uint8_t *resultData);
 extern int32_t Store_key(uint8_t *newKey);
 extern int32_t Store_iv(uint8_t *newIv);
-extern void print_Block(uint8_t *block);
-extern void print2Secure(char *string, void *ptr);
+extern void printBlock(uint8_t *block);
+extern void printSecure(char *string, void *ptr, uint8_t val);
 extern void printNetworkData(networkData *netData);
 extern int32_t Secure_LED_On(void);
 extern int32_t Secure_LED_Off(void);
@@ -53,12 +55,9 @@ int main(void)
     DEBUG_PORT_Init();
 
     if (DEMO) {
-        print2Secure("+---------------------------------------------+",NULL);
-        print2Secure("|           Nonsecure is running ...          |",NULL);
-        print2Secure("+---------------------------------------------+",NULL);
-        print2Secure("|                                             |",NULL);
-        print2Secure("|         Wait & listen on TCP 5386 ...       |",NULL);
-        print2Secure("|                                             |",NULL);
+        printSecure("+---------------------------------------------+",NULL,NULL);
+        printSecure("#           Nonsecure is running ...          #",NULL,NULL);
+        printSecure("+---------------------------------------------+",NULL,NULL);
     }
 
     XOM3_Func(3);
@@ -66,109 +65,197 @@ int main(void)
 
     //if (DEMO) testCryptDeCrypt();
 
-    networkData *rec = malloc(sizeof(networkData));
-    rec->length = 0;
-    WIFI_PORT_Receive_Data(0,rec);
-    print2Secure("\nReceived\n", NULL);
-    printNetworkData(rec); 
-
-    if(rec->length == 32) {
-
-        __attribute__((aligned(4))) uint8_t key[16] =
-        {
-            0x7f, 0x35, 0x91, 0xd3, 0x6f, 0xd5, 0x17, 0xa3, 0x7b, 0x6d, 0xe9, 0xe0, 0xdf, 0x93, 0x4b, 0x7a
-        };
-        __attribute__((aligned(4))) uint8_t iv[16] = {0};
-
-        Store_key(key);
-        Store_iv(iv);
-
-        CLK_SysTickLongDelay(500000);
-        print2Secure("|           Nonsecure is running ...          |\n",NULL);
-
-        rec->length = 0;
-        WIFI_PORT_Receive_Data(0,rec);
-        print2Secure("\nReceived\n", NULL);
-        printNetworkData(rec); 
-
-        CLK_SysTickLongDelay(500000);
-        print2Secure("|           Nonsecure is running ...          |\n",NULL);
-
-        __attribute__((aligned(4))) uint8_t cipheredData[16] = 
-        {
-            0x30, 0x29, 0x1e, 0x38, 0x82, 0x6c, 0x5e, 0x8f, 0x9e, 0xfb, 0xca, 0xfc, 0xad, 0x3d, 0xc2, 0x8a
-        };
-        __attribute__((aligned(4))) uint8_t resultData[16] = {0};
-
-        int r = Decrypt_data(cipheredData, resultData);
-        if (r == NULL) print2Secure("Error : 128bits only", NULL);
-
-        CLK_SysTickLongDelay(500000);
-        print2Secure("|           Nonsecure is running ...          |\n",NULL);
-        
-        print2Secure("&resultData  = %p\n",resultData);
-        print_Block(resultData);
-
-        //Get response to client
-        //<--
-
-
-        //-->
-        __attribute__((aligned(4))) uint8_t responsePlainData[16] = 
-        {
-            0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0d, 0x0F
-        };
-        __attribute__((aligned(4))) uint8_t responseCipherData[16] = {0};
-
-        int c = Encrypt_data(responsePlainData, responseCipherData);
-        if (c == NULL) print2Secure("Error : 128bits only", NULL);
-
-        CLK_SysTickLongDelay(500000);
-        print2Secure("|           Nonsecure is running ...          |\n",NULL);
-
-        print2Secure("&responseData  = %p\n",responseCipherData);
-        print_Block(responseCipherData);
-
-        networkData *sent = malloc(sizeof(networkData));
-        sent->length = 30;
-        char *sen = malloc(sizeof(char)*30);
-        char charToSend[30] = "Response from Nuvoton Board !\n";
-        for (int nb=0; nb <= sent->length; nb++) sen[nb] = charToSend[nb];
-        sent->data = sen;
-        WIFI_PORT_Send_Data(1, sent);
-        free(sent);
-
-    }
-
-
 	while(1){
 
         if(Secure_SW2_Status() == 0)
         {
 
             while(Secure_SW2_Status() == 0); //Attente du front descendant du bouton
+            demoPres();
+
+        }
+
+        if(Secure_SW3_Status() == 0)
+        {
+
+            while(Secure_SW3_Status() == 0); //Attente du front descendant du bouton
 
             //char command_CWLIF[] = "AT+CWLIF\r\n";
             //WIFI_PORT_Write(0, command_CWLIF, (sizeof(command_CWLIF) / sizeof(char))-1);
             //WIFI_PORT_Red(1);
 
             networkData *sent = malloc(sizeof(networkData));
+            sent->data = malloc(sizeof(char)*30);
             sent->length = 30;
-            char *sen = malloc(sizeof(char)*30);
+            
             char charToSend[30] = "Response from Nuvoton Board !\n";
-            for (int nb=0; nb <= sent->length; nb++) sen[nb] = charToSend[nb];
-            sent->data = sen;
+            for (int nb=0; nb <= sent->length; nb++) (sent->data)[nb] = charToSend[nb];
             WIFI_PORT_Send_Data(1, sent);
+            free(sent->data);
             free(sent);
 
         }
         
 	}
-
-    free(rec);
     
 
 }
+
+demoPres(void) {
+
+    networkData *rec = malloc(sizeof(networkData));
+    rec->data = malloc(sizeof(char)*33);
+    (rec->data)[32] = '\0';
+    rec->length = 0;
+    WIFI_PORT_Receive_Data(0,rec);
+    printSecure("#         Wait & listen on TCP 5386 ...       #",NULL,NULL);
+    printSecure("#            Ciphered Session Key ...         #",NULL,NULL);
+    printSecure("#                                             #",NULL,NULL);
+    printNetworkData(rec); 
+    printSecure("#                                             #",NULL,NULL);
+
+    if(rec->length == 32) {
+
+        __attribute__((aligned(4))) uint8_t iv[16] = {0};
+        __attribute__((aligned(4))) uint8_t key[16] = {0};
+        stringKeyToKey(rec->data, key);
+        //printBlock(key);
+
+        Store_key(key);     //NSC Function
+        Store_iv(iv);       //NSC Function
+
+        CLK_SysTickLongDelay(500000);
+        printSecure("#           Nonsecure is running ...          #",NULL,NULL);
+        printSecure("#         Wait & listen on TCP 5386 ...       #",NULL,NULL);
+
+        rec->length = 0;
+        WIFI_PORT_Receive_Data(0,rec);     //NSC Function
+        printSecure("#            Ciphered User Data ...           #",NULL,NULL);
+        printSecure("#                                             #",NULL,NULL);
+        printNetworkData(rec); 
+        printSecure("#                                             #",NULL,NULL);
+
+        CLK_SysTickLongDelay(500000);
+        printSecure("#           Nonsecure is running ...          #",NULL,NULL);
+
+
+        if(rec->length == 32) {
+
+            __attribute__((aligned(4))) uint8_t cipheredData[16] = {0};
+            __attribute__((aligned(4))) uint8_t resultData[16] = {0};
+            stringKeyToKey(rec->data, cipheredData);
+
+            int r = Decrypt_data(cipheredData, resultData);      //NSC Function
+            if (r == NULL) printSecure("Error : 128bits only", NULL,NULL);
+
+            CLK_SysTickLongDelay(500000);
+            printSecure("#           Nonsecure is running ...          #",NULL,NULL);
+            
+            //printSecure("&resultData  = %p\n",resultData,NULL);
+            //printBlock(resultData);
+            char *messageR = malloc(sizeof(char)*17);
+            messageR[16] = '\0';
+            for (int nb=0; nb < 16; nb++) messageR[nb] = (char)(resultData[nb]);
+            printSecure("#                                             #",NULL,NULL);
+            printSecure("#        User Data  = %s        #\n",messageR,NULL);
+            printSecure("#                                             #",NULL,NULL);
+
+            //Get response to client
+            //<--
+
+            printSecure("#               Create Answer ...             #",NULL,NULL);
+
+            //__attribute__((aligned(4))) uint8_t responsePlainData[16] = {"Que fait on ici?"};
+            __attribute__((aligned(4))) uint8_t responsePlainData[16] = {"SoutenanceOSCORE"};
+            __attribute__((aligned(4))) uint8_t responseCipherData[16] = {0};
+
+            //-->
+
+            int c = Encrypt_data(responsePlainData, responseCipherData);      //NSC Function
+            if (c == NULL) printSecure("Error : 128bits only", NULL,NULL);
+
+            CLK_SysTickLongDelay(500000);
+            printSecure("#           Nonsecure is running ...          #",NULL,NULL);
+            printSecure("#               Send Answer ...               #",NULL,NULL);
+            //printSecure("&responseData  = %p\n",responseCipherData,NULL);
+            //printBlock(responseCipherData);
+
+            networkData *sent = malloc(sizeof(networkData));
+            sent->data = malloc(sizeof(char)*33);
+            sent->length = 33;
+
+            char *messageS = malloc(sizeof(char)*33);
+            messageS[32] = '\0';
+            keyToStringKey(responseCipherData, messageS);
+            (sent->data)[32] = '\n';
+            keyToStringKey(responseCipherData, sent->data);
+            WIFI_PORT_Send_Data(0, sent);
+            printSecure("#                 Data Sent !                 #",NULL,NULL);
+            printSecure("+---------------------------------------------+",NULL,NULL);
+            free(sent->data);
+            free(sent);
+
+        }
+
+    }
+
+    free(rec->data);
+    free(rec);
+
+}
+
+void stringKeyToKey(char *stringKey, uint8_t *key) {
+
+    //printSecure("StringKeyToKey\n", NULL, NULL);
+
+    uint8_t temp0;
+    int i = 0;
+
+    //printSecure("stringKey[0] = %x\n", NULL,(uint8_t)stringKey[0]);
+
+    for (int nb=0; nb < 32; nb++) {
+        if (stringKey[nb] >= 0x30 && stringKey[nb] <= 0x39) {
+            if (!(nb%2)) temp0 = ((uint8_t)stringKey[nb]-0x30)<<4;
+            else temp0 = temp0 | ((uint8_t)stringKey[nb]-0x30);
+            //printSecure("temp0_A : %x\n", NULL,temp0);
+        }
+        else if (stringKey[nb] >= 0x61 && stringKey[nb] <= 0x66) {
+            if (!(nb%2)) temp0 = (stringKey[nb]-0x57)<<4;
+            else temp0 = temp0 | (stringKey[nb]-0x57);
+            //printSecure("temp0_B : %x\n", NULL,temp0);
+        }
+        else {
+            printSecure("StringKeyToKey ERROR : Bad Key.\n", NULL, NULL);
+            break;
+        }
+        i = (int)(nb/2);
+        key[i] = temp0;
+    }
+
+}
+
+void keyToStringKey(uint8_t *key, char *stringKey) {
+
+    //printSecure("keyToStringKey\n", NULL, NULL);
+    //printSecure("key[0] = %x\n", NULL,(uint8_t)key[0]);
+    uint8_t temp0;
+    int i = 0;
+
+    for (int nb=0; nb < 32; nb++) {
+
+        i = (int)(nb/2);
+        if (!(nb%2)) temp0 = (key[i]>>4) & 0x0f;
+        else temp0 = 0x0f & key[i];
+
+        if (temp0 >= 0 && temp0 <= 9) stringKey[nb] = (char)(temp0+0x30);
+        else if (temp0 >= 0xa && temp0 <= 0xf) stringKey[nb] = (char)(temp0+0x57);
+
+    }
+
+    //printSecure("stringKey = %s\n", stringKey, NULL);
+
+}
+
 
 void testCryptDeCrypt() {
 
@@ -187,12 +274,12 @@ void testCryptDeCrypt() {
     __attribute__((aligned(4))) uint8_t iv[16] = {0};
 
     if (DEMO) {
-        //print2Secure("&key  = %p\n",key);
-        //print_Block(key);
-        //print2Secure("&iv  = %p\n",iv);
-        //print_Block(iv);
-        print2Secure("&plainData  = %p\n",plainData);
-        print_Block(plainData);
+        //printSecure("&key  = %p\n",key);
+        //printBlock(key);
+        //printSecure("&iv  = %p\n",iv);
+        //printBlock(iv);
+        printSecure("&plainData  = %p\n",plainData, NULL);
+        printBlock(plainData);
         CLK_SysTickLongDelay(500000);
     }
 
@@ -200,25 +287,25 @@ void testCryptDeCrypt() {
     Store_iv(iv);
 
     int c = Encrypt_data(plainData, cipheredData);
-    if (c == NULL) print2Secure("Error : 128bits only", NULL);
+    if (c == NULL) printSecure("Error : 128bits only", NULL, NULL);
 
     if (DEMO) {
         CLK_SysTickLongDelay(500000);
-        print2Secure("|           Nonsecure is running ...          |\n",NULL);
+        printSecure("|           Nonsecure is running ...          |\n",NULL, NULL);
 
-        print2Secure("&cipheredData  = %p\n",cipheredData);
-        print_Block(cipheredData);
+        printSecure("&cipheredData  = %p\n",cipheredData, NULL);
+        printBlock(cipheredData);
     }
 
     int r = Decrypt_data(cipheredData, resultData);
-    if (r == NULL) print2Secure("Error : 128bits only", NULL);
+    if (r == NULL) printSecure("Error : 128bits only", NULL, NULL);
 
     if (DEMO) {
         CLK_SysTickLongDelay(500000);
-        print2Secure("|           Nonsecure is running ...          |\n",NULL);
+        printSecure("|           Nonsecure is running ...          |\n",NULL, NULL);
         
-        print2Secure("&resultData  = %p\n",resultData);
-        print_Block(resultData);
+        printSecure("&resultData  = %p\n",resultData, NULL);
+        printBlock(resultData);
 
         uint8_t error = 0;
         for (uint8_t i = 0 ; i < 16 ; i++) {
@@ -226,8 +313,8 @@ void testCryptDeCrypt() {
             if (resultData[i] != plainData[i]) error++;
 
         }
-        if (error != 0) print2Secure("Error plainData is not equal to resultData", NULL);
-        else print2Secure("No error plainData is equal to resultData", NULL);
+        if (error != 0) printSecure("Error plainData is not equal to resultData", NULL, NULL);
+        else printSecure("No error plainData is equal to resultData", NULL, NULL);
             
         Secure_LED_Off();
 

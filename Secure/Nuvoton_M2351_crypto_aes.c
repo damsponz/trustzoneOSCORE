@@ -79,7 +79,7 @@ void Nuvoton_M2351_crypto_useSessionKey(uint8_t channel) {
 	uint8_t sessionKey[16] = {0};
 
 	//printf("&cipheredSessionKey = %p\n", cipheredSessionKey);
-    //print_Block(cipheredSessionKey);
+    //printBlock(cipheredSessionKey);
 
 	Nuvoton_M2351_crypto_init(1, DECRYPT);
     Nuvoton_M2351_crypto_useMasterKey();
@@ -87,7 +87,7 @@ void Nuvoton_M2351_crypto_useSessionKey(uint8_t channel) {
     Nuvoton_M2351_decrypt_data(1, cipheredSessionKey, sessionKey);
 
 	//printf("&sessionKey = %p\n", sessionKey);
-    //print_Block(sessionKey);
+    //printBlock(sessionKey);
 
     uint32_t tmp_sk[4];
     uint32_t tmp_si[4];

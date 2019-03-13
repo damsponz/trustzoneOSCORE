@@ -150,7 +150,7 @@ int main(void)
     WIFI_PORT_Start();
     
     //printf("&cipheredSessionKey = %p\n", cipheredSessionKey);
-    //print_Block((uint8_t *)cipheredSessionKey);
+    //printBlock((uint8_t *)cipheredSessionKey);
 
     /* Boot to Non Secure World */
     Boot_Init(NEXT_BOOT_BASE); 

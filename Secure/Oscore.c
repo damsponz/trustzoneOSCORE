@@ -99,7 +99,7 @@ int32_t Store_key(uint8_t *newKey) {
     }
 
     //printf("&cipheredSessionKey = %p\n", cipheredSessionKey);
-    //print_Block(cipheredSessionKey);
+    //printBlock(cipheredSessionKey);
 
     if (DEMO) LED_Off();    
     return OSCORE_CRYPTO_SUCCESS;
@@ -129,7 +129,7 @@ int32_t Store_iv(uint8_t *newIv) {
  *----------------------------------------------------------------------------*/
 
 __NONSECURE_ENTRY
-int32_t print_Block(uint8_t *block) {
+int32_t printBlock(uint8_t *block) {
 
     //printf("&block  = %p\n",block);
 
@@ -148,10 +148,11 @@ int32_t print_Block(uint8_t *block) {
 }
 
 __NONSECURE_ENTRY
-int32_t print2Secure(char *string, void *ptr) {
+int32_t printSecure(char *string, void *ptr, uint8_t val) {
 
-    if (ptr == NULL) printf("%s\n",string);
-		else printf(string,ptr);
+    if (ptr == NULL && val == NULL) printf("%s\n",string);
+    if (ptr == NULL && val != NULL) printf(string,val);
+	if (ptr != NULL && val == NULL) printf(string,ptr);
 
 	return 1;
 
@@ -213,7 +214,7 @@ __NONSECURE_ENTRY
 int WIFI_PORT_Receive_Data(int print, networkData *netData)
 {
 
-    if (DEMO) printf("|    Secure is running ... Receive Data       |\n");
+    if (DEMO) printf("|      Secure is running ... Wait Data        |\n");
 
     LED_G = 0;
     char buff = 0;
@@ -302,11 +303,11 @@ int WIFI_PORT_Receive_Data(int print, networkData *netData)
         }
     }
 
-    dataR[lengthData] = '\0';
-    if (print) printf("data : %s\n", dataR);
-    char *outData = malloc(sizeof(char)*(lengthData+1));
-    for (int nb=0; nb <= lengthData; nb++) outData[nb] = dataR[nb];
-    netData->data = outData;
+    //dataR[lengthData] = '\0';
+    //if (print) printf("data : %s\n", dataR);
+    //char *outData = malloc(sizeof(char)*(lengthData+1));
+    for (int nb=0; nb <= lengthData; nb++) (netData->data)[nb] = dataR[nb];
+    //netData->data = outData;
     netData->length = lengthData;
 
     LED_G = 1;
