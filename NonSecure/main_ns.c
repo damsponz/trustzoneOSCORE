@@ -104,12 +104,12 @@ int main(void)
 
 void demoPres(void) {
 
+    printSecure("#         Wait & listen on port 5386 ...      #",NULL,NULL);
     networkData *rec = malloc(sizeof(networkData));
     rec->data = malloc(sizeof(char)*33);
     (rec->data)[32] = '\0';
     rec->length = 0;
-    WIFI_PORT_Receive_Data(1,rec);
-    printSecure("#         Wait & listen on port 5386 ...      #",NULL,NULL);
+    WIFI_PORT_Receive_Data(0,rec);
     printSecure("#            Ciphered Session Key ...         #",NULL,NULL);
     printSecure("#                                             #",NULL,NULL);
     printNetworkData(rec); 
