@@ -64,3 +64,5 @@ Secure/KEIL/Objects
 *.uvguix.*
 *.uvmpw.uvgui.*
 *.scvd
+*.sublime-workspace
+*.sublime-project
