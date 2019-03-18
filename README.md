@@ -1,5 +1,6 @@
-#trustzoneOSCORE
-##Global informations
+# trustzoneOSCORE
+
+## Global informations
 This project is a proof of concept to secure IoT device with ARM trustZone Cortex M feature. This code is design for Nuvoton M2351 (M2351KIAAE) board. We create a first step to implement OSCORE on constrained device with secure usage of the keys.
 
 Two hardware features are enabled :
@@ -9,10 +10,10 @@ Two hardware features are enabled :
 
 Nuvoton and ARM split the memory in two type Secure and NonSecure. Each mode use a dedicated address range, and in fact NonSecure world can’t access to Secure memory. For more informations check this (url nuvoton).
 
-##Files and functions
+## Files and functions
 The project is organized with thoses files.
 
-###Nuvoton\_M2351\_wifi\_module.h (Secure Folder)
+### Nuvoton\_M2351\_wifi\_module.h (Secure Folder)
 
 All functions in this file can just be called by Secure World.
 
@@ -42,7 +43,7 @@ Init ESP8266 WiFi module and set the configuration as next :
 	@param print          : if this param is set to 1, printf are active on UART0
 	@details              : Wait for receive answer, char by char, and wait response from ESP module "OK" message on UART port
 	
-###Nuvoton\_M2351\_crypto\_aes.h (Secure Folder)
+### Nuvoton\_M2351\_crypto\_aes.h (Secure Folder)
 All this functions are not available from Non Secure World.
 
 **void Nuvoton\_M2351\_crypto\_init(uint8\_t channel, uint8\_t modeAES);**
@@ -84,11 +85,11 @@ Start AES cipher primitive on the channel parameter passed. The channel must be 
 	
 Start AES decipher primitive on the channel parameter passed. The channel must be init and a key must be loaded in the AES crypto accelerator before use this function.
 
-###Oscore.h (Secure Folder)
+### Oscore.h (Secure Folder)
 
 All functions in Oscore.c file (with __NONSECURE_ENTRY) can be called by Secure AND NonSecure World.
 
-#####_Crypto_
+##### _Crypto_
 ***
 
 **int32_t Encrypt_data(uint8_t \*plainData, uint8_t \*cipheredData);**
@@ -107,7 +108,7 @@ Store 128 bits ciphered session key received by network. This key is stored as c
 
 Store 128bits initial vector received by network.
 
-#####_WiFi_
+##### _WiFi_
 ***
 **typedef struct NETWORKDATA networkData;**
 
@@ -130,7 +131,7 @@ This method is used to wait data packet from network. The waiting pattern is +IP
 
 This method is used to send data packet defined in the networkData structure passed as parameter.
 
-#####_Print & LED_
+##### _Print & LED_
 ***
 **int32_t printBlock(uint8_t \*block);**
 
@@ -156,7 +157,7 @@ Set Green LED on
 
 Set Green LED off
 
-###main_ns.c (NonSecure Folder)
+### main_ns.c (NonSecure Folder)
 
 **typedef struct NETWORKDATA networkData;**
 
@@ -210,7 +211,7 @@ At the start this main function is waiting of press on SW2 or SW3
 
 After one loop SW2 or SW3 can be press to execute another demo.
 
-###main.c (Secure Folder)
+### main.c (Secure Folder)
 
 **int main(void);**
 
